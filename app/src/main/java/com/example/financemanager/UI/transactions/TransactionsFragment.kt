@@ -6,39 +6,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.databinding.FragmentTransactionsBinding
 
 
 class TransactionsFragment : Fragment() {
 
 
-    private var _binding: FragmentTransactionsBinding? = null
-    private val binding get() = _binding!!
+//    private var _binding: FragmentTransactionsBinding? = null
+//    private val binding get() = _binding!!
 
-    private lateinit var transactionsViewModel: TransactionsViewModel
+    private val binding: FragmentTransactionsBinding by viewBinding()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        transactionsViewModel =
-            ViewModelProvider(this).get(TransactionsViewModel::class.java)
+//    private lateinit var transactionsViewModel: TransactionsViewModel
 
-        _binding = FragmentTransactionsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+    private val transactionsViewModel: TransactionsViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val textView: TextView = binding.textTransactions
         transactionsViewModel.text.observe(viewLifecycleOwner, {
             textView.text = it
         })
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
 }

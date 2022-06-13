@@ -1,6 +1,6 @@
-package com.example.financemanager.dataBase.repositories
+package com.example.financemanager.data.repositories
 
-import com.example.financemanager.dataBase.models.Category
+import com.example.financemanager.data.models.Category
 import kotlinx.coroutines.flow.Flow
 
 interface CategoriesRepository {

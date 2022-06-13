@@ -1,6 +1,6 @@
-package com.example.financemanager.dataBase.repositories
+package com.example.financemanager.data.repositories
 
-import com.example.financemanager.dataBase.models.Transaction
+import com.example.financemanager.data.models.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionsRepository {

@@ -33,6 +33,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         setupActionBarWithNavController(navHostFragment.navController, appBarConfiguration)
-        navView.setupWithNavController(navHostFragment.navController)
+        binding.bottomNavigation.setupWithNavController(navHostFragment.navController)
     }
 }

@@ -1,6 +1,8 @@
-package com.example.financemanager.dataBase.models
+package com.example.financemanager.data.models
 
 import com.example.financemanager.R
+import java.text.DecimalFormat
+import kotlin.math.absoluteValue
 
 enum class TransactionType {INCOME, EXPENSE}
 
@@ -21,3 +23,7 @@ val colorList = listOf(
     R.color.brown,
     R.color.black
 )
+
+fun Double.toAmountFormat(): String {
+    return DecimalFormat(if (this >= 0) "###,###.##" else "–###,###.##").format(this.absoluteValue)
+}

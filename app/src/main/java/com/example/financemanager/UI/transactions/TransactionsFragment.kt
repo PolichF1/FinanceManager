@@ -9,10 +9,11 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentTransactionsBinding
 
 
-class TransactionsFragment : Fragment() {
+class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
 
 //    private var _binding: FragmentTransactionsBinding? = null
@@ -26,11 +27,7 @@ class TransactionsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val textView: TextView = binding.textTransactions
-        transactionsViewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
-        })
+        
     }
 
 }

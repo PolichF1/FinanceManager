@@ -1,4 +1,4 @@
-package com.example.financemanager.dataBase.models
+package com.example.financemanager.data.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

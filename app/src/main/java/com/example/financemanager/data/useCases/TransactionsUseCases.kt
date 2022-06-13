@@ -1,7 +1,7 @@
-package com.example.financemanager.useCases
+package com.example.financemanager.data.useCases
 
-import com.example.financemanager.dataBase.models.Transaction
-import com.example.financemanager.dataBase.repositories.TransactionsRepository
+import com.example.financemanager.data.models.Transaction
+import com.example.financemanager.data.repositories.TransactionsRepository
 import kotlinx.coroutines.flow.Flow
 
 data class TransactionsUseCases(

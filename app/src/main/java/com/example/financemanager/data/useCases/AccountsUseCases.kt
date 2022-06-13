@@ -1,6 +1,6 @@
-package com.example.financemanager.useCases
+package com.example.financemanager.data.useCases
 
-import com.example.financemanager.dataBase.repositories.AccountsRepository
+import com.example.financemanager.data.repositories.AccountsRepository
 import kotlinx.coroutines.flow.Flow
 
 data class AccountsUseCases(
@@ -13,31 +13,31 @@ data class AccountsUseCases(
 )
 
 class DeleteAccount(private val repository: AccountsRepository) {
-    suspend operator fun invoke(account: com.example.financemanager.dataBase.models.Account){
+    suspend operator fun invoke(account: com.example.financemanager.data.models.Account){
         return repository.deleteAccount(account)
     }
 }
 
 class UpdateAccount(private val repository: AccountsRepository) {
-    suspend operator fun invoke(account: com.example.financemanager.dataBase.models.Account) {
+    suspend operator fun invoke(account: com.example.financemanager.data.models.Account) {
         return repository.insertAccount(account)
     }
 }
 
 class AddAccount(private val repository: AccountsRepository) {
-    suspend operator fun invoke(account: com.example.financemanager.dataBase.models.Account) {
+    suspend operator fun invoke(account: com.example.financemanager.data.models.Account) {
         return repository.insertAccount(account)
     }
 }
 
 class GetAccount(private val repository: AccountsRepository) {
-    suspend operator fun invoke(id: Int): com.example.financemanager.dataBase.models.Account? {
+    suspend operator fun invoke(id: Int): com.example.financemanager.data.models.Account? {
         return repository.getAccountById(id)
     }
 }
 
 class GetAccounts(private val repository: AccountsRepository) {
-    operator fun invoke(): Flow<List<com.example.financemanager.dataBase.models.Account>> {
+    operator fun invoke(): Flow<List<com.example.financemanager.data.models.Account>> {
         return repository.getAccounts()
     }
 }

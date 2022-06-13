@@ -3,24 +3,63 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_categories">
-
-    <fragment
-        android:id="@+id/navigation_categories"
-        android:name="com.example.financemanager.UI.categories.CategoriesFragment"
-        android:label="@string/title_categories"
-        tools:layout="@layout/fragment_categories" />
+    app:startDestination="@+id/navigation_transactions">
 
     <fragment
         android:id="@+id/navigation_accounts"
         android:name="com.example.financemanager.UI.accounts.AccountsFragment"
         android:label="@string/title_accounts"
-        tools:layout="@layout/fragment_accounts" />
+        tools:layout="@layout/fragment_accounts">
+        <action
+            android:id="@+id/action_navigation_accounts_to_accountActions"
+            app:destination="@id/account_actions_fragment" />
+        <action
+            android:id="@+id/action_navigation_accounts_to_accountEdit"
+            app:destination="@id/account_edit_fragment" />
+        <action
+            android:id="@+id/action_navigation_accounts_to_accountAddFragment"
+            app:destination="@id/account_add_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_transactions"
         android:name="com.example.financemanager.UI.transactions.TransactionsFragment"
         android:label="@string/title_transactions"
         tools:layout="@layout/fragment_transactions" />
+
+    <fragment
+        android:id="@+id/navigation_chart"
+        android:name="com.example.financemanager.UI.chart.ChartFragment"
+        android:label="@string/title_chart"
+        tools:layout="@layout/fragment_chart" />
+
+    <dialog
+        android:id="@+id/account_actions_fragment"
+        android:name="com.example.financemanager.UI.accounts.actions.AccountActionsFragment"
+        android:label="account_actions_fragment"
+        tools:layout="@layout/fragment_account_actions">
+        <action
+            android:id="@+id/action_accountActions_to_navigation_accounts"
+            app:destination="@id/navigation_accounts" />
+    </dialog>
+
+    <fragment
+        android:id="@+id/account_edit_fragment"
+        android:name="com.example.financemanager.UI.accounts.edit.AccountEditFragment"
+        android:label="account_edit_fragment"
+        tools:layout="@layout/fragment_account_edit">
+        <action
+            android:id="@+id/action_accountEdit_to_navigation_accounts"
+            app:destination="@id/navigation_accounts" />
+    </fragment>
+    <fragment
+        android:id="@+id/account_add_fragment"
+        android:name="com.example.financemanager.UI.accounts.add.AccountAddFragment"
+        android:label="account_add_fragment"
+        tools:layout="@layout/fragment_account_add">
+        <action
+            android:id="@+id/action_accountAddFragment_to_navigation_accounts"
+            app:destination="@id/navigation_accounts" />
+    </fragment>
 
 </navigation>

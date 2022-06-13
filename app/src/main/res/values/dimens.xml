@@ -2,4 +2,14 @@
 <resources>
     <dimen name="text_size">20sp</dimen>
     <dimen name="layouts_margin">8sp</dimen>
+    <dimen name="item_layout_padding">12sp</dimen>
+
+    <dimen name="accounts_title_margin">12sp</dimen>
+    <dimen name="account_item_title_textsize">14sp</dimen>
+    <dimen name="account_item_amount_textsize">16sp</dimen>
+    <dimen name="account_item_currency_textsize">14sp</dimen>
+    <dimen name="account_item_image_margin">12sp</dimen>
+    <dimen name="account_item_currency_margin">4sp</dimen>
+    <dimen name="account_item_image_width">60sp</dimen>
+    <dimen name="account_item_image_height">40sp</dimen>
 </resources>

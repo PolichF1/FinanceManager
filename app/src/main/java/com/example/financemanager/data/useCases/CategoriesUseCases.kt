@@ -1,7 +1,7 @@
-package com.example.financemanager.useCases
+package com.example.financemanager.data.useCases
 
-import com.example.financemanager.dataBase.models.Category
-import com.example.financemanager.dataBase.repositories.CategoriesRepository
+import com.example.financemanager.data.models.Category
+import com.example.financemanager.data.repositories.CategoriesRepository
 import kotlinx.coroutines.flow.Flow
 
 data class CategoriesUseCases(

@@ -1,17 +1,32 @@
 package com.example.financemanager.data.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 import com.example.financemanager.utils.Converter
 import java.time.LocalDate
 import java.time.LocalTime
 
-@Entity
+@Entity(
+    tableName = "transactions",
+    foreignKeys = [
+        ForeignKey(
+            entity = Category::class,
+            parentColumns = ["id"],
+            childColumns = ["category_id"],
+            onDelete = CASCADE
+        ),
+        ForeignKey(
+            entity = Account::class,
+            parentColumns = ["id"],
+            childColumns = ["account_id"],
+            onDelete = CASCADE
+        )
+    ]
+)
 @TypeConverters(Converter::class)
 data class Transaction(
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
     val name: String,
@@ -20,8 +35,8 @@ data class Transaction(
     val date: LocalDate,
     val time: LocalTime,
     val type: TransactionType,
-    val categoryId: Int,
-    val accountId: Int
+    @ColumnInfo(name = "category_id")val categoryId: Int,
+    @ColumnInfo(name = "account_id")val accountId: Int
 )
 
 enum class TransactionType {INCOME, EXPENSE}

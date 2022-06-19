@@ -1,18 +1,19 @@
 package com.example.financemanager.data.models
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity
+@Entity(tableName = "categories")
 data class Category(
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
 
     val name: String,
     val amount: Double = 0.0,
     val currency: String = "USD",
     val icon: Int,
-    val iconColor: Int
+    @ColumnInfo(name = "icon_color") val iconColor: Int
 )

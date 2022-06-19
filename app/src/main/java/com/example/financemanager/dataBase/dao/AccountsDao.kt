@@ -6,10 +6,10 @@ import com.example.financemanager.data.models.Account
 @Dao
 interface AccountsDao {
 
-    @Query("SELECT * FROM 'account'")
+    @Query("SELECT * FROM 'accounts'")
     fun getAccounts(): kotlinx.coroutines.flow.Flow<List<Account>>
 
-    @Query("SELECT * FROM 'account' WHERE id = :id")
+    @Query("SELECT * FROM 'accounts' WHERE id = :id")
     suspend fun getAccountById(id: Int): Account?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

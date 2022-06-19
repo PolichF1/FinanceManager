@@ -16,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
-    private val accountUseCase: AccountsUseCases,
-    private val categoryUseCases: CategoryUseCases
+    private val accountUseCase: AccountsUseCases
 ) : ViewModel() {
 
     private val _accounts = MutableStateFlow(emptyList<Account>())

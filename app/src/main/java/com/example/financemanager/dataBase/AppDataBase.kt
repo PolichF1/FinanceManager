@@ -11,8 +11,8 @@ import com.example.financemanager.data.models.Transaction
 
 @Database(
     entities = [Account::class, Category::class, Transaction::class],
-    version = 1,
-    exportSchema = false
+    version = 2,
+    exportSchema = true
 )
 
 abstract class AppDataBase : RoomDatabase() {

@@ -3,6 +3,7 @@ package com.example.financemanager.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
 import com.example.financemanager.data.repositories.AccountsRepository
 import com.example.financemanager.data.repositories.CategoriesRepository
 import com.example.financemanager.data.repositories.TransactionsRepository
@@ -32,7 +33,7 @@ object AppModule {
             app.applicationContext,
             AppDataBase::class.java,
             AppDataBase.APP_DATABASE_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().createFromAsset("database/finance_manager.db").build()
     }
 
     @Provides

@@ -11,23 +11,19 @@ import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentTransactionsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
 
-//    private var _binding: FragmentTransactionsBinding? = null
-//    private val binding get() = _binding!!
-
     private val binding: FragmentTransactionsBinding by viewBinding()
-
-//    private lateinit var transactionsViewModel: TransactionsViewModel
 
     private val transactionsViewModel: TransactionsViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
+
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.financemanager.dataBase.repositories
 
+import com.example.financemanager.data.models.DayInfo
 import com.example.financemanager.data.models.Transaction
 import com.example.financemanager.data.repositories.TransactionsRepository
 import com.example.financemanager.dataBase.dao.TransactionsDao
@@ -15,6 +16,10 @@ class TransactionsRepositoryImpl(
 
     override suspend fun getTransactionById(id: Int): Transaction? {
         return dao.getTransactionById(id)
+    }
+
+    override fun getTransactionAmountsPerDay(): Flow<List<DayInfo>> {
+        return dao.getTransactionAmountPerDay()
     }
 
     override suspend fun insertTransaction(transaction: Transaction) {

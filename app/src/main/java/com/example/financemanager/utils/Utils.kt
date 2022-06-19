@@ -1,10 +1,7 @@
-package com.example.financemanager.data.models
+package com.example.financemanager
 
-import com.example.financemanager.R
 import java.text.DecimalFormat
 import kotlin.math.absoluteValue
-
-enum class TransactionType {INCOME, EXPENSE}
 
 val colorList = listOf(
     R.color.red,

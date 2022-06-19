@@ -9,7 +9,12 @@ import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.Transaction
 
-@Database(entities = [Account::class, Category::class, Transaction::class], version = 1)
+@Database(
+    entities = [Account::class, Category::class, Transaction::class],
+    version = 1,
+    exportSchema = false
+)
+
 abstract class AppDataBase : RoomDatabase() {
 
     abstract val accountsDao: AccountsDao

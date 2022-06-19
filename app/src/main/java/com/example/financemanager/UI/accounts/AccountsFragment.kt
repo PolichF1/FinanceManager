@@ -10,14 +10,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountsBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class AccountsFragment : Fragment(R.layout.fragment_accounts) {
 
     private val binding: FragmentAccountsBinding by viewBinding()
+
     private val accountsViewModel: AccountsViewModel by viewModels()
+
     private val accountsAdapter = AccountsRecyclerAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,5 +40,4 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
             }
         }
     }
-
 }

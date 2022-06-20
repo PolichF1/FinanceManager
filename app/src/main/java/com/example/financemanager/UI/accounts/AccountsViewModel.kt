@@ -7,10 +7,8 @@ import com.example.financemanager.data.useCases.AccountsUseCases
 import com.example.financemanager.data.useCases.CategoryUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -20,7 +18,10 @@ class AccountsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _accounts = MutableStateFlow(emptyList<Account>())
-    val accounts: StateFlow<List<Account>> = _accounts
+    val accounts = _accounts.asStateFlow()
+
+    private val _events = MutableSharedFlow<Event>()
+    val events = _events.asSharedFlow()
 
     private var getAccountsJob: Job? = null
 
@@ -33,5 +34,22 @@ class AccountsViewModel @Inject constructor(
         getAccountsJob = accountUseCase.getAccounts()
             .onEach { accounts -> _accounts.value = accounts }
             .launchIn(viewModelScope)
+    }
+
+    fun selectAccount(account: Account) {
+        viewModelScope.launch {
+            _events.emit(Event.OpenAccountActionSheet(account))
+        }
+    }
+
+    fun addButtonClick() {
+        viewModelScope.launch {
+            _events.emit(Event.NavigateToAddAccountScreen)
+        }
+    }
+
+    sealed class Event() {
+        object NavigateToAddAccountScreen : Event()
+        data class OpenAccountActionSheet (val account: Account) : Event()
     }
 }

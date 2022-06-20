@@ -1,18 +1,20 @@
 package com.example.financemanager.UI.accounts
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.databinding.AccountItemBinding
 import com.example.financemanager.toAmountFormat
 
-class AccountsRecyclerAdapter : RecyclerView.Adapter<AccountsRecyclerAdapter.AccountViewHolder>() {
+class AccountsRecyclerAdapter (val onClickListener: OnClickListener) :
+    ListAdapter<Account, AccountsRecyclerAdapter.AccountViewHolder>(DIFF_CALLBACK){
 
-    private var listOfAccounts = emptyList<Account>()
-
-    class AccountViewHolder(private val binding: AccountItemBinding) :
+    inner class AccountViewHolder(private val binding: AccountItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(account: Account) {
@@ -24,6 +26,10 @@ class AccountsRecyclerAdapter : RecyclerView.Adapter<AccountsRecyclerAdapter.Acc
                 DrawableCompat.wrap(binding.iconBackground.drawable),
                 account.color
             )
+
+            itemView.setOnClickListener {
+                onClickListener.onClick(account)
+            }
         }
     }
 
@@ -34,15 +40,21 @@ class AccountsRecyclerAdapter : RecyclerView.Adapter<AccountsRecyclerAdapter.Acc
     }
 
     override fun onBindViewHolder(holder: AccountViewHolder, position: Int) {
-        holder.bind(listOfAccounts[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return listOfAccounts.size
+
+    companion object DIFF_CALLBACK : DiffUtil.ItemCallback<Account>() {
+        override fun areItemsTheSame(oldItem: Account, newItem: Account): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: Account, newItem: Account): Boolean {
+            return oldItem.hashCode() == newItem.hashCode()
+        }
     }
 
-    fun setData(newList: List<Account>) {
-        this.listOfAccounts = newList
-        notifyDataSetChanged()
+    class OnClickListener(val clickListener : (account: Account) -> Unit) {
+        fun onClick(account: Account) = clickListener(account)
     }
 }

@@ -1,18 +1,28 @@
 package com.example.financemanager.UI.accounts
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financemanager.R
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.databinding.AccountItemBinding
 import com.example.financemanager.toAmountFormat
+import com.example.financemanager.utils.mapOfColors
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AccountsRecyclerAdapter (val onClickListener: OnClickListener) :
+@Singleton
+class AccountsRecyclerAdapter @Inject constructor (
+    private val context: Context) :
     ListAdapter<Account, AccountsRecyclerAdapter.AccountViewHolder>(DIFF_CALLBACK){
+
+    private var onClickListener: OnClickListener? = null
 
     inner class AccountViewHolder(private val binding: AccountItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -20,15 +30,17 @@ class AccountsRecyclerAdapter (val onClickListener: OnClickListener) :
         fun bind(account: Account) {
             binding.title.text = account.name
             binding.amount.text = account.amount.toAmountFormat()
-            binding.currency.text = account.currency
 
             DrawableCompat.setTint(
-                DrawableCompat.wrap(binding.iconBackground.drawable),
-                account.color
+                binding.iconBackground.drawable,
+                ContextCompat.getColor(
+                    context,
+                    mapOfColors[account.color] ?: R.color.orange_red
+                )
             )
 
             itemView.setOnClickListener {
-                onClickListener.onClick(account)
+                onClickListener?.onClick(account)
             }
         }
     }
@@ -52,6 +64,10 @@ class AccountsRecyclerAdapter (val onClickListener: OnClickListener) :
         override fun areContentsTheSame(oldItem: Account, newItem: Account): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
     }
 
     class OnClickListener(val clickListener : (account: Account) -> Unit) {

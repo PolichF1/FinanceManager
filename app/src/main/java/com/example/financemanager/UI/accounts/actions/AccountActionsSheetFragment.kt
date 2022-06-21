@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.DialogFragmentNavigator
+import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountActionsSheetBinding
 import com.example.financemanager.toAmountFormat
+import com.example.financemanager.utils.mapOfColors
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -45,8 +49,13 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
 
         binding.accountName.text = account.name
         binding.accountAmount.text = account.amount.toAmountFormat()
-        binding.accountCurrency.text = account.currency
-        binding.actionsContainer.setBackgroundColor(account.color)
+
+        binding.actionsContainer.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                mapOfColors[account.color] ?: R.color.orange_red
+            )
+        )
 
         binding.editButton.setOnClickListener {
             viewModel.editButtonClick(account)
@@ -60,10 +69,12 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
             viewModel.events.collectLatest { event ->
                 when (event) {
                     is AccountActionsViewModel.Event.NavigateToEditAccountScreen -> {
-                        findNavController().navigate(
-                            AccountActionsSheetFragmentDirections
-                                .actionAccountActionsSheetFragmentToAccountEditFragment(account)
-                        )
+                       if (getCurrentDestination() == this@AccountActionsSheetFragment.javaClass.name) {
+                           findNavController().navigate(
+                               AccountActionsSheetFragmentDirections
+                                   .actionAccountActionsSheetFragmentToAccountEditFragment(account)
+                           )
+                       }
                     }
                     is AccountActionsViewModel.Event.ShowDeleteAccountDialog -> {
                         val alert = AlertDialog.Builder(requireContext())
@@ -90,6 +101,10 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
             }
         }
     }
+
+    private fun getCurrentDestination() =
+        (findNavController().currentDestination as? FragmentNavigator.Destination)?.className
+            ?: (findNavController().currentDestination as? DialogFragmentNavigator.Destination)?.className
 
     override fun onDestroy() {
         super.onDestroy()

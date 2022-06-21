@@ -20,6 +20,7 @@ import com.example.financemanager.databinding.FragmentAccountsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AccountsFragment : Fragment(R.layout.fragment_accounts) {
@@ -28,14 +29,16 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
 
     private val viewModel: AccountsViewModel by viewModels()
 
+    @Inject
+    lateinit var accountsAdapter : AccountsRecyclerAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        val accountsAdapter =
-            AccountsRecyclerAdapter(AccountsRecyclerAdapter.OnClickListener { account ->
-                viewModel.selectAccount(account)
-            })
+       accountsAdapter.setOnClickListener(AccountsRecyclerAdapter.OnClickListener { account ->
+           viewModel.selectAccount(account)
+       })
 
         binding.listOfAccounts.apply {
             adapter = accountsAdapter

@@ -33,7 +33,7 @@ class AddAccount(private val repository: AccountsRepository) {
 
 class UpdateAccount(private val repository: AccountsRepository) {
     suspend operator fun invoke(account: Account) {
-        return repository.insertAccount(account)
+        return repository.updateAccount(account)
     }
 }
 

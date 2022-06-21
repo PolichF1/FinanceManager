@@ -15,6 +15,9 @@ interface AccountsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccount(account: Account)
 
+    @Update
+    suspend fun updateAccount(account: Account)
+
     @Delete
     suspend fun deleteAccount(account: Account)
 }

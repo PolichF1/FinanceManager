@@ -26,6 +26,10 @@ class TransactionsRepositoryImpl(
         return dao.insertTransaction(transaction)
     }
 
+    override suspend fun updateTransaction(transaction: Transaction) {
+        return dao.updateTransaction(transaction)
+    }
+
     override suspend fun deleteTransaction(transaction: Transaction) {
         return dao.deleteTransaction(transaction)
     }

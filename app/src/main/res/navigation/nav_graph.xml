@@ -25,13 +25,28 @@
         android:id="@+id/transactions_fragment"
         android:name="com.example.financemanager.UI.transactions.TransactionsFragment"
         android:label="@string/title_transactions"
-        tools:layout="@layout/fragment_transactions" />
+        tools:layout="@layout/fragment_transactions" >
+
+        <action
+            android:id="@+id/action_transactions_fragment_to_selectDateDialogFragment"
+            app:destination="@id/select_date_dialog_fragment" />
+        <action
+            android:id="@+id/action_transactions_fragment_to_addTransactionSheetFragment"
+            app:destination="@id/add_transaction_sheet_fragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/chart_fragment"
         android:name="com.example.financemanager.UI.chart.ChartFragment"
         android:label="@string/title_chart"
-        tools:layout="@layout/fragment_chart" />
+        tools:layout="@layout/fragment_chart" >
+
+        <action
+            android:id="@+id/action_chart_fragment_to_selectDateDialogFragment"
+            app:destination="@id/select_date_dialog_fragment" />
+
+    </fragment>
 
     <dialog
         android:id="@+id/account_actions_sheet_fragment"
@@ -63,6 +78,10 @@
         <argument
             android:name="editableAccount"
             app:argType="com.example.financemanager.data.models.Account" />
+
+        <action
+            android:id="@+id/action_account_edit_fragment_to_colorPickerDialogFragment"
+            app:destination="@id/colorPickerDialogFragment" />
 
     </fragment>
 

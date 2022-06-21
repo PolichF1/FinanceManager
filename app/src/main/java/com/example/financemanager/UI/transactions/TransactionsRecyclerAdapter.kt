@@ -5,7 +5,10 @@ import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financemanager.R
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.DayInfo
@@ -16,9 +19,13 @@ import com.example.financemanager.data.useCases.TransactionUseCases
 import com.example.financemanager.databinding.DayInfoItemBinding
 import com.example.financemanager.databinding.TransactionItemBinding
 import com.example.financemanager.toAmountFormat
+import com.example.financemanager.utils.mapOfColors
+import com.example.financemanager.utils.mapOfDrawables
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TransactionsRecyclerAdapter @Inject constructor(
     private val context: Context,
     private val transactionUseCases: TransactionUseCases,
@@ -43,10 +50,19 @@ class TransactionsRecyclerAdapter @Inject constructor(
             }
 
             if (currentCategory != null && currentAccount != null) {
-                binding.transactionName.text = transaction.name
+                binding.categoryName.text = currentCategory.name
                 binding.cardName.text = currentAccount.name
-                binding.icon.setImageResource(currentCategory.icon)
-                binding.iconBackground.setImageResource(currentCategory.iconColor)
+                binding.icon.setImageResource(
+                    mapOfDrawables[currentCategory.icon] ?: R.drawable.ic_bank
+                )
+
+                DrawableCompat.setTint(
+                    binding.iconBackground.drawable,
+                    ContextCompat.getColor(
+                        context,
+                        mapOfColors[currentCategory.iconColor] ?: R.color.orange_red
+                    )
+                )
             }
         }
     }

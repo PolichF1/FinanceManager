@@ -14,6 +14,5 @@ data class Account(
 
     val name: String,
     val amount: Double = 0.0,
-    val currency: String = "USD",
     val color: Int
 ) : Parcelable

@@ -11,7 +11,7 @@ import com.example.financemanager.data.models.Transaction
 
 @Database(
     entities = [Account::class, Category::class, Transaction::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 

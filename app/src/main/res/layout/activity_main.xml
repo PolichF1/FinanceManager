@@ -53,9 +53,10 @@
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Regular" />
+                    android:text="@string/all_accounts" />
 
                 <ImageView
+                    android:id="@+id/more_button"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="bottom"
@@ -67,10 +68,10 @@
             <TextView
                 android:id="@+id/toolbar_subtitle"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                tools:text="Nov 27, 2021"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="November 27, 2021" />
+                android:layout_gravity="center" />
 
         </LinearLayout>
 

@@ -25,7 +25,8 @@ object TransactionsModule {
     fun providesTransactionsUseCases(repository: TransactionsRepository): TransactionUseCases {
         return TransactionUseCases(
             getTransaction = GetTransaction(repository),
-            getTransactions = GetTransactions(repository),
+            getTransactionViews = GetTransactionViews(repository),
+//            getTransactions = GetTransactions(repository),
             addTransaction = AddTransaction(repository),
             updateTransaction = UpdateTransaction(repository),
             deleteTransaction = DeleteTransaction(repository),

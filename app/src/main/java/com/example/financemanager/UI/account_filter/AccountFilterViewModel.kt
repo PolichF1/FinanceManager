@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.account_filter
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
@@ -12,6 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountFilterViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
     private val accountsUseCases: AccountsUseCases
 ) : ViewModel() {
 
@@ -41,6 +43,8 @@ class AccountFilterViewModel @Inject constructor(
             _events.emit(Event.SelectAccount(account))
         }
     }
+
+    fun getPreferences() = sharedPreferences
 
     sealed class Event {
         data class SelectAccount(val account: Account) : Event()

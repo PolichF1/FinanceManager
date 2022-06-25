@@ -1,5 +1,6 @@
 package com.example.financemanager
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
     private val accountsUseCases: AccountsUseCases
 ) : ViewModel() {
 
@@ -31,6 +33,10 @@ class MainActivityViewModel @Inject constructor(
     val events = _events.asSharedFlow()
 
     private var getAccountJob: Job? = null
+
+    init {
+        getAccounts()
+    }
 
 
     private fun getAccounts() {
@@ -66,10 +72,11 @@ class MainActivityViewModel @Inject constructor(
         }
     }
 
+    fun getPreferences() = sharedPreferences
 
     sealed class Event {
-        object OpenSettingsScreen: Event()
-        object OpenSelectAccountDialog: Event()
+        object OpenSettingsScreen : Event()
+        object OpenSelectAccountDialog : Event()
     }
 
 }

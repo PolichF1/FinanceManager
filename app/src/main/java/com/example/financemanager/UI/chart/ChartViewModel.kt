@@ -1,11 +1,9 @@
 package com.example.financemanager.UI.chart
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.financemanager.data.models.Category
-import com.example.financemanager.data.models.Transaction
+import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.useCases.CategoryUseCases
 import com.example.financemanager.data.useCases.TransactionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,44 +15,30 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChartViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases,
-    private val transactionUseCases: TransactionUseCases
+    private val sharedPreferences: SharedPreferences,
+    private val categoryUseCases: CategoryUseCases
 ) : ViewModel() {
 
-    private val _categories = MutableStateFlow(emptyList<Category>())
-    val categories: StateFlow<List<Category>> = _categories
+    private val _categoriesWithAmount = MutableStateFlow(emptyList<CategoryView>())
+    val categoriesWithAmount = _categoriesWithAmount.asStateFlow()
 
-    private val _transactions = MutableStateFlow(emptyList<Transaction>())
-    val transactions : StateFlow<List<Transaction>> = _transactions
-
-    val combineFlow = _categories.combine(_transactions) { categories, transactions ->
-        categories to transactions
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
-
-    private var getCategoriesJob: Job? = null
-    private var getTransactionsJob: Job? = null
+    private var getCategoriesWithAmountJob: Job? = null
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
     init {
-        getCategories()
-        getTransactions()
+        getCategoriesWithAmount()
     }
 
-    private fun getCategories() {
-        getCategoriesJob?.cancel()
-        getCategoriesJob = categoryUseCases.getCategories()
-            .onEach { categories -> _categories.value = categories }
+    private fun getCategoriesWithAmount() {
+        getCategoriesWithAmountJob?.cancel()
+        getCategoriesWithAmountJob = categoryUseCases.getCategoryViews()
+            .onEach { categories -> _categoriesWithAmount.value = categories }
             .launchIn(viewModelScope)
     }
 
-    private fun getTransactions() {
-        getTransactionsJob?.cancel()
-        getTransactionsJob = transactionUseCases.getTransactions()
-            .onEach { transactions -> _transactions.value = transactions }
-            .launchIn(viewModelScope)
-    }
+    fun getPreferences() = sharedPreferences
 
     fun selectDateCLick() {
         viewModelScope.launch {

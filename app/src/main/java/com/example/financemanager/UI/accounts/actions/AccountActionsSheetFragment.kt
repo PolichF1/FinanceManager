@@ -37,7 +37,7 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAccountActionsSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,7 +48,11 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         val account = args.selectedAccount
 
         binding.accountName.text = account.name
-        binding.accountAmount.text = account.amount.toAmountFormat()
+        binding.accountAmount.text = account.amount.toAmountFormat(withMinus = false)
+        binding.accountCurrency.text = viewModel.getPreferences().getString(
+            "currency",
+            requireContext().resources.getStringArray(R.array.currency_values)[0]
+        )
 
         binding.actionsContainer.setBackgroundColor(
             ContextCompat.getColor(

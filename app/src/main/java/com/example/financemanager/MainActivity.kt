@@ -4,21 +4,30 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.financemanager.UI.accounts.AccountsFragmentDirections
+import com.example.financemanager.UI.chart.ChartFragmentDirections
 import com.example.financemanager.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val binding: ActivityMainBinding by viewBinding(R.id.container)
+
+    private val viewModel: MainActivityViewModel by viewModels()
 
     private val navController: NavController by lazy {
         (supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment).navController
@@ -31,30 +40,104 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
+        var currentDestination: Int? = null
+
         binding.buttonSettings.setOnClickListener {
-            Toast.makeText(applicationContext, "settings", Toast.LENGTH_SHORT).show()
+            viewModel.settingsButtonClick()
         }
+
+        binding.toolbarInfoBox.setOnClickListener {
+            viewModel.selectAccountButtonClick()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collectLatest { event ->
+                when (event) {
+                    is MainActivityViewModel.Event.OpenSettingsScreen -> {
+                        when (currentDestination) {
+                            R.id.accounts_fragment -> navController.navigate(
+                                AccountsFragmentDirections.actionAccountsFragmentToSettingsActivity()
+                            )
+                            R.id.chart_fragment -> navController.navigate(
+                                ChartFragmentDirections.actionChartFragmentToSettingsActivity()
+                            )
+
+                        }
+                    }
+                    is MainActivityViewModel.Event.OpenSelectAccountDialog -> {
+                        navController.navigate(R.id.action_dialog_fragment_account_filter)
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.currentAccount.collectLatest { account ->
+                binding.toolbarTitle.text = account?.name ?: getString(R.string.all_accounts)
+            }
+        }
+
+        val pattern = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+        lifecycleScope.launchWhenStarted {
+            viewModel.currentDateRange.collectLatest {
+                binding.toolbarSubtitle.text =
+                    if (it.first == null && it.second == null)
+                        getString(R.string.all_time)
+                    else if (it.first == it.second)
+                        it.first?.format(pattern)
+                    else
+                        "${it.first?.format(pattern)} - ${it.second?.format(pattern)}"
+            }
+        }
+
         val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.accounts_fragment,
-                R.id.transactions_fragment,
-                R.id.chart_fragment
-            )
+            setOf(R.id.accounts_fragment, R.id.transactions_fragment, R.id.chart_fragment)
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigation.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener {_, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            val isAddOrEditFragment =
-                destination.id == R.id.account_add_fragment || destination.id == R.id.account_edit_fragment
+            val isAddOrEditFragment = when (currentDestination) {
+                R.id.account_add_fragment -> true
+                R.id.account_edit_fragment -> true
+                else -> false
+            }
 
-            binding.buttonSettings.visibility = if (isAddOrEditFragment) View.GONE else View.VISIBLE
-            binding.toolbarInfoBox.visibility = if (isAddOrEditFragment) View.GONE else View.VISIBLE
-
+            binding.bottomNavigation.visibility =
+                if (isAddOrEditFragment) View.GONE else View.VISIBLE
+            binding.buttonSettings.visibility =
+                if (isAddOrEditFragment) View.GONE else View.VISIBLE
+            binding.toolbarInfoBox.visibility =
+                if (isAddOrEditFragment) View.GONE else View.VISIBLE
             supportActionBar?.setDisplayShowTitleEnabled(isAddOrEditFragment)
+
+            val isAccountsFragment = when (currentDestination) {
+                R.id.accounts_fragment -> true
+                R.id.account_actions_sheet_fragment -> true
+                else -> false
+            }
+
+            binding.moreButton.visibility = if (isAccountsFragment) View.GONE else View.VISIBLE
+            binding.toolbarInfoBox.isEnabled = !isAccountsFragment
         }
+    }
+
+    override fun onStart() {
+        val theme = viewModel.getPreferences().getString(
+            "theme",
+            resources.getStringArray(R.array.theme_values)[2]
+        )
+
+        AppCompatDelegate.setDefaultNightMode(
+            when (theme) {
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+        )
+        super.onStart()
     }
 
     override fun onSupportNavigateUp(): Boolean {

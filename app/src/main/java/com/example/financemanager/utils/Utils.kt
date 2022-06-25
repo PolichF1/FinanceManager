@@ -6,8 +6,8 @@ import java.time.*
 import java.util.*
 import kotlin.math.absoluteValue
 
-fun Double.toAmountFormat(): String {
-    return DecimalFormat(if (this >= 0) "###,###.##" else "–###,###.##").format(this.absoluteValue)
+fun Double.toAmountFormat(withMinus: Boolean): String {
+    return DecimalFormat(if (withMinus) "-###,###.##" else "###,###.##").format(this.absoluteValue)
 }
 
 fun getCurrentLocalDate(): LocalDate = LocalDate.parse(

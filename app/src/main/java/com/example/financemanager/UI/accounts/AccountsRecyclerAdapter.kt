@@ -1,6 +1,7 @@
 package com.example.financemanager.UI.accounts
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AccountsRecyclerAdapter @Inject constructor (
-    private val context: Context) :
-    ListAdapter<Account, AccountsRecyclerAdapter.AccountViewHolder>(DIFF_CALLBACK){
+class AccountsRecyclerAdapter @Inject constructor(
+    private val context: Context,
+    private val sharedPreferences: SharedPreferences
+) : ListAdapter<Account, AccountsRecyclerAdapter.AccountViewHolder>(DIFF_CALLBACK) {
 
     private var onClickListener: OnClickListener? = null
 
@@ -29,7 +31,12 @@ class AccountsRecyclerAdapter @Inject constructor (
 
         fun bind(account: Account) {
             binding.title.text = account.name
-            binding.amount.text = account.amount.toAmountFormat()
+            binding.amount.text = account.amount.toAmountFormat(withMinus = false)
+
+            binding.currency.text = sharedPreferences.getString(
+                "currency",
+                context.resources.getStringArray(R.array.currency_values)[0]
+            )
 
             DrawableCompat.setTint(
                 binding.iconBackground.drawable,

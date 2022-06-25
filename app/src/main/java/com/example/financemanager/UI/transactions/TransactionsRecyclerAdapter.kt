@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.transactions
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.view.LayoutInflater
@@ -9,19 +10,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.financemanager.R
-import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.models.Category
-import com.example.financemanager.data.models.DayInfo
-import com.example.financemanager.data.models.Transaction
-import com.example.financemanager.data.useCases.AccountsUseCases
-import com.example.financemanager.data.useCases.CategoryUseCases
+import com.example.financemanager.data.models.*
 import com.example.financemanager.data.useCases.TransactionUseCases
 import com.example.financemanager.databinding.DayInfoItemBinding
 import com.example.financemanager.databinding.TransactionItemBinding
 import com.example.financemanager.toAmountFormat
 import com.example.financemanager.utils.mapOfColors
 import com.example.financemanager.utils.mapOfDrawables
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,41 +24,30 @@ import javax.inject.Singleton
 class TransactionsRecyclerAdapter @Inject constructor(
     private val context: Context,
     private val transactionUseCases: TransactionUseCases,
-    private val accountUseCases: AccountsUseCases,
-    private val categoryUseCases: CategoryUseCases
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var transactionsWithInfoList = emptyList<Any>()
-    private var accountsList = emptyList<Account>()
-    private var categoriesList = emptyList<Category>()
 
     inner class TransactionViewHolder(
         private val binding: TransactionItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(transaction: Transaction) {
-            val currentCategory = categoriesList.find { category ->
-                category.id == transaction.categoryId
-            }
-            val currentAccount = accountsList.find { account ->
-                account.id == transaction.accountId
-            }
+        fun bind(transactionView: TransactionView) {
+            binding.categoryName.text = transactionView.categoryName
+            binding.cardName.text = transactionView.accountName
+            binding.textAmount.text = transactionView.amount.toAmountFormat(withMinus = true)
 
-            if (currentCategory != null && currentAccount != null) {
-                binding.categoryName.text = currentCategory.name
-                binding.cardName.text = currentAccount.name
-                binding.icon.setImageResource(
-                    mapOfDrawables[currentCategory.icon] ?: R.drawable.ic_bank
-                )
+            binding.icon.setImageResource(
+                mapOfDrawables[transactionView.icon] ?: R.drawable.ic_bank
+            )
 
-                DrawableCompat.setTint(
-                    binding.iconBackground.drawable,
-                    ContextCompat.getColor(
-                        context,
-                        mapOfColors[currentCategory.iconColor] ?: R.color.orange_red
-                    )
+            DrawableCompat.setTint(
+                binding.iconBackground.drawable,
+                ContextCompat.getColor(
+                    context,
+                    mapOfColors[transactionView.icon_color] ?: R.color.orange_red
                 )
-            }
+            )
         }
     }
 
@@ -77,7 +61,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
             val amount = dayInfo.amountPerDay
             val monthAndYear = "${date.month} ${date.year}"
 
-            binding.amount.text = amount.toAmountFormat()
+            binding.amount.text = amount.toAmountFormat(withMinus = false)
             binding.day.text = date.dayOfMonth.toString()
             binding.monthAndYear.text = monthAndYear
             binding.dayOfWeek.text = date.dayOfWeek.name
@@ -104,8 +88,8 @@ class TransactionsRecyclerAdapter @Inject constructor(
         when(holder.itemViewType) {
             TRANSACTION_VIEW_TYPE -> {
                 val viewHolder = holder as TransactionViewHolder
-                val transaction = transactionsWithInfoList[position] as Transaction
-                viewHolder.bind(transaction)
+                val transactionView = transactionsWithInfoList[position] as TransactionView
+                viewHolder.bind(transactionView)
             }
             else -> {
                 val viewHolder = holder as DayInfoViewHolder
@@ -120,13 +104,12 @@ class TransactionsRecyclerAdapter @Inject constructor(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (transactionsWithInfoList[position] is Transaction) TRANSACTION_VIEW_TYPE else DAY_INFO_VIEW_TYPE
+        return if (transactionsWithInfoList[position] is TransactionView) TRANSACTION_VIEW_TYPE else DAY_INFO_VIEW_TYPE
     }
 
-    suspend fun updateData(){
-        transactionsWithInfoList = transactionUseCases.getTransactionListForRecyclerView()
-        accountsList = accountUseCases.getAccounts().first()
-        categoriesList = categoryUseCases.getCategories().first()
+    @SuppressLint("NotifyDataSetChanged")
+    suspend fun updateData(transactionView: List<TransactionView>){
+        transactionsWithInfoList = transactionUseCases.getTransactionListForRecyclerView(transactionView)
         notifyDataSetChanged()
     }
 

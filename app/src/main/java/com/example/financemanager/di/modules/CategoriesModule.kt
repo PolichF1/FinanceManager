@@ -25,7 +25,8 @@ object CategoriesModule {
     fun providesCategoriesUseCases(repository: CategoriesRepository): CategoryUseCases {
         return CategoryUseCases(
             getCategory = GetCategory(repository),
-            getCategories = GetCategories(repository),
+            getCategoryViews = GetCategoryViews(repository),
+//            getCategories = GetCategories(repository),
             addCategory = AddCategory(repository),
             updateCategory = UpdateCategory(repository),
             deleteCategory = DeleteCategory(repository)

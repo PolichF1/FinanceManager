@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.accounts.actions
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountActionsViewModel @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
     private val accountUseCases: AccountsUseCases
 ) : ViewModel() {
 
@@ -40,6 +42,8 @@ class AccountActionsViewModel @Inject constructor(
     suspend fun deleteAccount(account: Account) {
         accountUseCases.deleteAccount(account)
     }
+
+    fun getPreferences() = sharedPreferences
 
 
     sealed class Event {

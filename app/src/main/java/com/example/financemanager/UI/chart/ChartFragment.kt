@@ -15,8 +15,7 @@ import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
-import com.example.financemanager.data.models.Category
-import com.example.financemanager.data.models.Transaction
+import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.databinding.CategoryItemBinding
 import com.example.financemanager.databinding.FragmentChartBinding
 import com.example.financemanager.toAmountFormat
@@ -40,16 +39,23 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
+//        lifecycleScope.launchWhenStarted {
+//            viewModel.combineFlow.collectLatest {
+//                if (it != null && it.first.isNotEmpty() && it.second.isNotEmpty()) {
+//                    updateChartData(it.first, it.second)
+//                }
+//            }
+//        }
+
         lifecycleScope.launchWhenStarted {
-            viewModel.combineFlow.collectLatest {
-                if (it != null && it.first.isNotEmpty() && it.second.isNotEmpty()) {
-                    updateChartData(it.first, it.second)
-                }
+            viewModel.categoriesWithAmount.collectLatest {
+                if (it.isNotEmpty())
+                    updateChartData(it)
             }
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collectLatest {  event ->
+            viewModel.events.collectLatest { event ->
                 when (event) {
                     is ChartViewModel.Event.SelectDate -> {
                         if (getCurrentDestination() == this@ChartFragment.javaClass.name) {
@@ -64,37 +70,37 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
 
     }
 
-    private fun updateChartData(categories: List<Category>, transactions: List<Transaction>) {
-        updateCategories(categories)
+    private fun updateChartData(categoryView: List<CategoryView>) {
+        val currency = viewModel.getPreferences().getString(
+            "currency",
+            requireContext().resources.getStringArray(R.array.currency_values)[0]
+        )
+
+        updateCategories(categoryView, currency)
 
         var amount = 0.0
         val entries = ArrayList<PieEntry>()
         val colors = ArrayList<Int>()
 
-        transactions.forEach { transaction ->
-            val colorId = categories.find { category ->
-                category.id == transaction.categoryId
-            }?.iconColor ?: 0
-
-            val color = ContextCompat.getColor(
-                requireContext(),
-                mapOfColors[colorId] ?: R.color.orange_red
+        categoryView.forEach { categories ->
+            colors.add(
+                ContextCompat.getColor(
+                    requireContext(),
+                    mapOfColors[categories.iconColor] ?: R.color.orange_red
+                )
             )
-
-            colors.add(color)
-            entries.add(PieEntry(transaction.amount.toFloat()))
-            amount += transaction.amount
         }
 
         val dataSet = PieDataSet(entries, "")
         dataSet.colors = colors
         dataSet.setDrawValues(false)
 
+        val amountString = amount.toAmountFormat(withMinus = false) + ' ' + currency
         binding.chart.apply {
 
             isDrawHoleEnabled = true
             holeRadius = 78f
-            centerText = "Expenses\n${amount.toAmountFormat()}"
+            centerText = "Expenses\n$amountString"
             setCenterTextSize(20f)
             description.isEnabled = false
             legend.isEnabled = false
@@ -107,53 +113,34 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         binding.chart.animateY(1000, Easing.EaseInOutQuad)
     }
 
-    private fun updateCategories(categories: List<Category>) {
-        binding.category1.apply {
-            this.setCategoryAttributes(categories[0])
-        }
-        binding.category2.apply {
-            this.setCategoryAttributes(categories[1])
-        }
-        binding.category3.apply {
-            this.setCategoryAttributes(categories[2])
-        }
-        binding.category4.apply {
-            this.setCategoryAttributes(categories[3])
-        }
-        binding.category5.apply {
-            this.setCategoryAttributes(categories[4])
-        }
-        binding.category6.apply {
-            this.setCategoryAttributes(categories[5])
-        }
-        binding.category7.apply {
-            this.setCategoryAttributes(categories[6])
-        }
-        binding.category8.apply {
-            this.setCategoryAttributes(categories[7])
-        }
-        binding.category9.apply {
-            this.setCategoryAttributes(categories[8])
-        }
-        binding.category10.apply {
-            this.setCategoryAttributes(categories[9])
-        }
-        binding.category11.apply {
-            this.setCategoryAttributes(categories[10])
-        }
-        binding.category12.apply {
-            this.setCategoryAttributes(categories[11])
-        }
+    private fun updateCategories(categoryViews: List<CategoryView>, currency: String?) {
+        binding.category1.setCategoryAttributes(categoryViews[0], currency)
+        binding.category2.setCategoryAttributes(categoryViews[1], currency)
+        binding.category3.setCategoryAttributes(categoryViews[2], currency)
+        binding.category4.setCategoryAttributes(categoryViews[3], currency)
+        binding.category5.setCategoryAttributes(categoryViews[4], currency)
+        binding.category6.setCategoryAttributes(categoryViews[5], currency)
+        binding.category7.setCategoryAttributes(categoryViews[6], currency)
+        binding.category8.setCategoryAttributes(categoryViews[7], currency)
+        binding.category9.setCategoryAttributes(categoryViews[8], currency)
+        binding.category10.setCategoryAttributes(categoryViews[9], currency)
+        binding.category11.setCategoryAttributes(categoryViews[10], currency)
+        binding.category12.setCategoryAttributes(categoryViews[11], currency)
     }
 
-    private fun CategoryItemBinding.setCategoryAttributes(category: Category) {
-        this.name.text = category.name
-        this.icon.setImageResource(mapOfDrawables[category.icon] ?: 0)
+    private fun CategoryItemBinding.setCategoryAttributes(
+        categoryView: CategoryView,
+        currency: String?
+    ) {
+        this.name.text = categoryView.name
+        this.icon.setImageResource(mapOfDrawables[categoryView.icon] ?: 0)
+        val amount = categoryView.amount.toAmountFormat(withMinus = false) + ' ' + currency
+        this.amount.text = amount
         DrawableCompat.setTint(
             this.iconBackground.drawable,
             ContextCompat.getColor(
                 requireContext(),
-                mapOfColors[category.iconColor] ?: R.color.orange_red
+                mapOfColors[categoryView.iconColor] ?: R.color.orange_red
             )
         )
     }

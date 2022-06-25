@@ -55,17 +55,26 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.transactions.collectLatest {
-                transactionAdapter.updateData()
+                transactionAdapter.updateData(it)
             }
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collectLatest { event ->
-                when (event) {
+            viewModel.events.collectLatest {
+                when (it) {
                     is TransactionsViewModel.Event.OpenAddTransactionSheet -> {
                         if (getCurrentDestination() == this@TransactionsFragment.javaClass.name) {
                             findNavController().navigate(
-                                TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionSheetFragment(event.account)
+                                TransactionsFragmentDirections.actionTransactionsFragmentToSelectCategorySheetFragment(
+                                    it.account
+                                )
+                            )
+                        }
+                    }
+                    is TransactionsViewModel.Event.SelectDate -> {
+                        if (getCurrentDestination() == this@TransactionsFragment.javaClass.name) {
+                            findNavController().navigate(
+                                TransactionsFragmentDirections.actionTransactionsFragmentToSelectDateDialogFragment()
                             )
                         }
                     }
@@ -79,6 +88,9 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.select_date) {
+            viewModel.selectDateClick()
+        }
         return super.onOptionsItemSelected(item)
     }
 

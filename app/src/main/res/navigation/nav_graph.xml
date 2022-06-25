@@ -19,6 +19,10 @@
             android:id="@+id/action_accounts_fragment_to_account_actions_sheet_fragment"
             app:destination="@id/account_actions_sheet_fragment" />
 
+        <action
+            android:id="@+id/action_accounts_fragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
+
     </fragment>
 
     <fragment
@@ -31,8 +35,12 @@
             android:id="@+id/action_transactions_fragment_to_selectDateDialogFragment"
             app:destination="@id/select_date_dialog_fragment" />
         <action
-            android:id="@+id/action_transactions_fragment_to_addTransactionSheetFragment"
-            app:destination="@id/add_transaction_sheet_fragment" />
+            android:id="@+id/action_transactions_fragment_to_select_category_sheet_fragment"
+            app:destination="@id/select_category_sheet_fragment" />
+
+        <action
+            android:id="@+id/action_transactions_fragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
 
     </fragment>
 
@@ -45,6 +53,10 @@
         <action
             android:id="@+id/action_chart_fragment_to_selectDateDialogFragment"
             app:destination="@id/select_date_dialog_fragment" />
+
+        <action
+            android:id="@+id/action_chart_fragment_to_settingsActivity"
+            app:destination="@id/settingsActivity" />
 
     </fragment>
 
@@ -79,10 +91,6 @@
             android:name="editableAccount"
             app:argType="com.example.financemanager.data.models.Account" />
 
-        <action
-            android:id="@+id/action_account_edit_fragment_to_colorPickerDialogFragment"
-            app:destination="@id/colorPickerDialogFragment" />
-
     </fragment>
 
     <fragment
@@ -96,5 +104,61 @@
             app:destination="@id/accounts_fragment" />
 
     </fragment>
+
+    <dialog
+        android:id="@+id/select_date_dialog_fragment"
+        android:name="com.example.financemanager.UI.transactions.add.date_pick.SelectDateDialogFragment"
+        android:label="select_date_dialog_fragment"
+        tools:layout="@layout/dialog_fragment_select_date" />
+
+    <dialog
+        android:id="@+id/select_category_sheet_fragment"
+        android:name="com.example.financemanager.UI.transactions.add.select_category.SelectCategorySheetFragment"
+        android:label="SelectCategorySheetFragment"
+        tools:layout="@layout/fragment_select_category_sheet">
+        <action
+            android:id="@+id/action_select_category_sheet_fragment_to_transactions_fragment"
+            app:destination="@id/transactions_fragment" />
+        <argument
+            android:name="selectedAccount"
+            app:argType="com.example.financemanager.data.models.Account" />
+        <action
+            android:id="@+id/action_select_category_sheet_fragment_to_add_transaction_sheet_fragment"
+            app:destination="@id/add_transaction_sheet_fragment"
+            app:popUpTo="@id/transactions_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/add_transaction_sheet_fragment"
+        android:name="com.example.financemanager.UI.transactions.add.AddTransactionSheetFragment"
+        android:label="AddTransactionSheetFragment"
+        tools:layout="@layout/fragment_add_transaction_sheet">
+        <argument
+            android:name="selectedAccount"
+            app:argType="com.example.financemanager.data.models.Account" />
+        <argument
+            android:name="selectedCategory"
+            app:argType="com.example.financemanager.data.models.CategoryView" />
+        <action
+            android:id="@+id/action_add_transaction_sheet_fragment_to_transactions_fragment"
+            app:destination="@id/transactions_fragment" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/dialog_fragment_account_filter"
+        android:name="com.example.financemanager.UI.account_filter.AccountFilterFragment"
+        android:label="dialog_fragment_account_filter"
+        tools:layout="@layout/dialog_fragment_account_filter" />
+
+    <action
+        android:id="@+id/action_dialog_fragment_account_filter"
+        app:destination="@id/dialog_fragment_account_filter" />
+
+    <activity
+        tools:layout="@layout/activity_settings"
+        android:id="@+id/settingsActivity"
+        android:name="com.example.financemanager.UI.settings.SettingsActivity"
+        android:label="SettingsActivity"/>
+
 
 </navigation>

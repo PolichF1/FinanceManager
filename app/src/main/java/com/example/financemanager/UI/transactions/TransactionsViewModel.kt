@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.Transaction
+import com.example.financemanager.data.models.TransactionView
 import com.example.financemanager.data.useCases.TransactionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -18,13 +19,13 @@ class TransactionsViewModel @Inject constructor(
    private val transactionUseCases: TransactionUseCases
 ): ViewModel() {
 
-    private val _transactions = MutableStateFlow(emptyList<Transaction>())
-    val transactions: StateFlow<List<Transaction>> = _transactions
+    private val _transactions = MutableStateFlow(emptyList<TransactionView>())
+    val transactions: StateFlow<List<TransactionView>> = _transactions
+
+    private var getTransactionsJob: Job? = null
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
-
-    private var getTransactionsJob: Job? = null
 
     init {
         getTransactions()
@@ -32,7 +33,7 @@ class TransactionsViewModel @Inject constructor(
 
     private fun getTransactions() {
         getTransactionsJob?.cancel()
-        getTransactionsJob = transactionUseCases.getTransactions()
+        getTransactionsJob = transactionUseCases.getTransactionViews()
             .onEach { transactions -> _transactions.value = transactions }
             .launchIn(viewModelScope)
     }
@@ -51,8 +52,6 @@ class TransactionsViewModel @Inject constructor(
 
     sealed class Event {
         object SelectDate: Event()
-        data class OpenAddTransactionSheet(val account: Account): Event()
+        data class OpenAddTransactionSheet(val account: Account) : Event()
     }
-
-
 }

@@ -1,54 +1,29 @@
 package com.example.financemanager.data.useCases
 
+import com.example.financemanager.asLocalDate
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.repositories.CategoriesRepository
+import com.example.financemanager.getCurrentLocalDate
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 data class CategoryUseCases(
-//    val getCategories: GetCategories,
-    val getCategory: GetCategory,
     val getCategoryViews: GetCategoryViews,
-    val addCategory: AddCategory,
-    val updateCategory: UpdateCategory,
-    val deleteCategory: DeleteCategory
 )
 
-//class GetCategories(private val repository: CategoriesRepository) {
-//    operator fun invoke(): Flow<List<Category>> {
-//        return repository.getCategories()
-//    }
-//}
-
-class GetCategory(private val repository: CategoriesRepository) {
-    suspend operator fun invoke(id: Int): Category? {
-        return repository.getCategoryById(id)
-    }
-}
 
 class GetCategoryViews(private val repository: CategoriesRepository) {
-    operator fun invoke(): Flow<List<CategoryView>> {
-        return repository.getCategoryViews()
+    operator fun invoke(from: LocalDate?, to: LocalDate?): Flow<List<CategoryView>> {
+
+        val minDate: LocalDate = from ?: "2000-01-01".asLocalDate()
+        val maxDate: LocalDate = to ?: getCurrentLocalDate()
+
+
+        return repository.getCategoryViews(minDate, maxDate)
     }
 }
 
-class AddCategory(private val repository: CategoriesRepository) {
-    suspend operator fun invoke(category: Category) {
-        return repository.updateCategory(category)
-    }
-}
-
-class UpdateCategory(private val repository: CategoriesRepository) {
-    suspend operator fun invoke(category: Category) {
-        return repository.insertCategory(category)
-    }
-}
-
-class DeleteCategory(private val repository: CategoriesRepository) {
-    suspend operator fun invoke(category: Category) {
-        return repository.deleteCategory(category)
-    }
-}
 
 
 

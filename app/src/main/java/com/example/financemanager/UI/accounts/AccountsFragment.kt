@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountsBinding
+import com.example.financemanager.toAmountFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -30,15 +31,15 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
     private val viewModel: AccountsViewModel by viewModels()
 
     @Inject
-    lateinit var accountsAdapter : AccountsRecyclerAdapter
+    lateinit var accountsAdapter: AccountsRecyclerAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-       accountsAdapter.setOnClickListener(AccountsRecyclerAdapter.OnClickListener { account ->
-           viewModel.selectAccount(account)
-       })
+        accountsAdapter.setOnClickListener(AccountsRecyclerAdapter.OnClickListener {
+            viewModel.selectAccount(it)
+        })
 
         binding.listOfAccounts.apply {
             adapter = accountsAdapter
@@ -46,14 +47,13 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
             addItemDecoration(getDivider())
         }
 
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenStarted {
             viewModel.accounts.collectLatest { newList ->
                 accountsAdapter.submitList(newList)
-
                 var amount = 0.0
                 newList.forEach { amount += it.amount }
 
-                binding.fullAmount.text = amount.toString()
+                binding.fullAmount.text = amount.toAmountFormat(withMinus = false)
                 binding.mainCurrency.text = viewModel.getPreferences().getString(
                     "currency",
                     requireContext().resources.getStringArray(R.array.currency_values)[0]
@@ -61,21 +61,19 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
             }
         }
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.events.collectLatest { event ->
-                when (event) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collectLatest {
+                when (it) {
                     is AccountsViewModel.Event.NavigateToAddAccountScreen -> {
                         if (getCurrentDestination() == this@AccountsFragment.javaClass.name) {
-                            findNavController().navigate(
-                                AccountsFragmentDirections.actionAccountsFragmentToAccountAddFragment()
-                            )
+                            findNavController().navigate(AccountsFragmentDirections.actionAccountsFragmentToAccountAddFragment())
                         }
                     }
                     is AccountsViewModel.Event.OpenAccountActionSheet -> {
                         if (getCurrentDestination() == this@AccountsFragment.javaClass.name) {
                             findNavController().navigate(
                                 AccountsFragmentDirections.actionAccountsFragmentToAccountActionsSheetFragment(
-                                    event.account
+                                    it.account
                                 )
                             )
                         }

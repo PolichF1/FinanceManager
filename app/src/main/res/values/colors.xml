@@ -8,7 +8,7 @@
     <color name="brown">#402C18</color>
 
     <color name="orange_red">#ffee423e</color>
-    <color name="red">#ffef1d26</color>
+    <color name="red">#FFEF1D26</color>
     <color name="red_purple">#ffa72391</color>
     <color name="purple">#ff5b3197</color>
     <color name="purple_blue">#ff20429c</color>
@@ -20,4 +20,7 @@
     <color name="yellow_orange">#fff8a71a</color>
     <color name="orange">#fff58726</color>
     <color name="pink">#ffe91e63</color>
+
+    <color name="dark_blue">#213140</color>
+    <color name="blue_300">#002f6c</color>
 </resources>

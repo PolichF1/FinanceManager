@@ -2,10 +2,9 @@ package com.example.financemanager.UI.accounts
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,7 +13,6 @@ import com.example.financemanager.R
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.databinding.AccountItemBinding
 import com.example.financemanager.toAmountFormat
-import com.example.financemanager.utils.mapOfColors
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -40,10 +38,7 @@ class AccountsRecyclerAdapter @Inject constructor(
 
             DrawableCompat.setTint(
                 binding.iconBackground.drawable,
-                ContextCompat.getColor(
-                    context,
-                    mapOfColors[account.color] ?: R.color.orange_red
-                )
+                Color.parseColor(account.color)
             )
 
             itemView.setOnClickListener {

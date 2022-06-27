@@ -1,6 +1,7 @@
 package com.example.financemanager.UI.accounts.actions
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,6 @@ import androidx.navigation.fragment.navArgs
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountActionsSheetBinding
 import com.example.financemanager.toAmountFormat
-import com.example.financemanager.utils.mapOfColors
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -54,12 +54,7 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
             requireContext().resources.getStringArray(R.array.currency_values)[0]
         )
 
-        binding.actionsContainer.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                mapOfColors[account.color] ?: R.color.orange_red
-            )
-        )
+        binding.actionsContainer.setBackgroundColor(Color.parseColor(account.color))
 
         binding.editButton.setOnClickListener {
             viewModel.editButtonClick(account)

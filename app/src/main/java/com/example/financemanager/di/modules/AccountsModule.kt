@@ -24,7 +24,6 @@ object AccountsModule {
     @Singleton
     fun providesAccountsUseCases(repository: AccountsRepository): AccountsUseCases {
         return AccountsUseCases(
-            getAccount = GetAccount(repository),
             getAccounts = GetAccounts(repository),
             addAccount = AddAccount(repository),
             updateAccount = UpdateAccount(repository),

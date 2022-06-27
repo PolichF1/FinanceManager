@@ -68,20 +68,24 @@ class SelectDateDialogFragment : DialogFragment(R.layout.fragment_select_date_di
                         dismiss()
                     }
                     is SelectDateDialogViewModel.Event.SelectWeek -> {
-                        val from =
-                            (getCurrentLocalDate().toMilliseconds() - (7 * DAY_IN_MS)).toLocalDate()
+                        val from = (getCurrentLocalDate().toMilliseconds() - (7 * DAY_IN_MS))
+                            .toLocalDate()
+
                         activityViewModel.setCurrentDateRange(from, getCurrentLocalDate())
                         dismiss()
                     }
                     is SelectDateDialogViewModel.Event.SelectMonth -> {
-                        val from =
-                            (getCurrentLocalDate().toMilliseconds() - (30 * DAY_IN_MS)).toLocalDate()
+                        val from = (getCurrentLocalDate().toMilliseconds() - (30 * DAY_IN_MS))
+                            .toLocalDate()
+
                         activityViewModel.setCurrentDateRange(from, getCurrentLocalDate())
                         dismiss()
                     }
                     is SelectDateDialogViewModel.Event.SelectYear -> {
                         val from =
-                            (getCurrentLocalDate().toMilliseconds() - (365 * DAY_IN_MS)).toLocalDate()
+                            (getCurrentLocalDate().toMilliseconds() - (365 * DAY_IN_MS)).
+                            toLocalDate()
+
                         activityViewModel.setCurrentDateRange(from, getCurrentLocalDate())
                         dismiss()
                     }

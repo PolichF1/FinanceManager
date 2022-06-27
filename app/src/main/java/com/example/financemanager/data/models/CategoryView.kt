@@ -13,7 +13,7 @@ data class CategoryView(
     val icon: Int,
 
     @ColumnInfo(name = "icon_color")
-    val iconColor: Int,
+    val iconColor: String,
 
     @ColumnInfo(name = "category_amount")
     val amount: Double

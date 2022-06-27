@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.transactions.add
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,6 @@ import com.example.financemanager.UI.transactions.add.select_category.Categories
 import com.example.financemanager.data.models.Transaction
 import com.example.financemanager.databinding.FragmentAddTransactionSheetBinding
 import com.example.financemanager.toAmountFormat
-import com.example.financemanager.utils.mapOfColors
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -25,18 +25,16 @@ import kotlinx.coroutines.flow.collectLatest
 class AddTransactionSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentAddTransactionSheetBinding? = null
-    private val binding
-        get() = _binding!!
+    private val binding get() = _binding!!
 
     private val viewModel: AddTransactionViewModel by viewModels()
 
     private val args by navArgs<AddTransactionSheetFragmentArgs>()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAddTransactionSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -50,27 +48,16 @@ class AddTransactionSheetFragment : BottomSheetDialogFragment() {
         binding.accountName.text = account.name
         binding.categoryName.text = category.name
 
-        binding.accountBackground.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                mapOfColors[account.color] ?: R.color.orange_red
-            )
-        )
-
-        binding.categoryBackground.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                mapOfColors[category.iconColor] ?: R.color.orange_red
-            )
-        )
+        binding.accountBackground.setBackgroundColor(Color.parseColor(account.color))
+        binding.categoryBackground.setBackgroundColor(Color.parseColor(category.iconColor))
 
         binding.applyButton.setOnClickListener {
             viewModel.applyButtonClick()
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collectLatest { event ->
-                when(event) {
+            viewModel.events.collectLatest {
+                when (it) {
                     is AddTransactionViewModel.Event.AddTransaction -> {
                         if (account.id != null) {
                             val transaction = Transaction(

@@ -4,21 +4,17 @@ import com.example.financemanager.data.models.DayInfo
 import com.example.financemanager.data.models.Transaction
 import com.example.financemanager.data.models.TransactionView
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 interface TransactionsRepository {
 
-//    fun getTransactions(): Flow<List<Transaction>>
 
-    fun getTransactionViews(): Flow<List<TransactionView>>
+    fun getTransactionViews(from: LocalDate, to: LocalDate): Flow<List<TransactionView>>
 
-    fun getTransactionAmountsPerDay(): Flow<List<DayInfo>>
-
-    suspend fun getTransactionById(id: Int): Transaction?
+    fun getTransactionAmountsPerDay(from: LocalDate, to: LocalDate): Flow<List<DayInfo>>
 
     suspend fun insertTransaction(transaction: Transaction)
 
-    suspend fun updateTransaction(transaction: Transaction)
-
-    suspend fun deleteTransaction(transaction: Transaction)
+    suspend fun deleteTransactionById(id: Int)
 
 }

@@ -1,6 +1,7 @@
 package com.example.financemanager.UI.transactions.add.select_category
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import com.example.financemanager.R
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.databinding.CategoryItemBinding
-import com.example.financemanager.utils.mapOfColors
 import com.example.financemanager.utils.mapOfDrawables
 import javax.inject.Inject
 
@@ -33,10 +33,7 @@ class CategoriesRecyclerAdapter @Inject constructor(
 
                 DrawableCompat.setTint(
                     binding.iconBackground.drawable,
-                    ContextCompat.getColor(
-                        context,
-                        mapOfColors[categoryView.iconColor] ?: R.color.orange_red
-                    )
+                    Color.parseColor(categoryView.iconColor)
                 )
 
                 itemView.setOnClickListener {

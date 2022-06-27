@@ -6,7 +6,6 @@ import com.example.financemanager.utils.Converter
 import java.time.LocalDate
 import java.time.LocalTime
 
-@TypeConverters(Converter::class)
 data class TransactionView(
 
     val id: Int,
@@ -15,14 +14,18 @@ data class TransactionView(
     val date: LocalDate,
     val time: LocalTime,
 
+    @ColumnInfo(name = "category_id")
+    val categoryId: Int,
     @ColumnInfo(name = "category_name")
     val categoryName: String,
 
+    @ColumnInfo(name = "account_id")
+    val accountId: Int,
     @ColumnInfo(name = "account_name")
     val accountName: String,
 
     val icon: Int,
 
     @ColumnInfo(name = "icon_color")
-    val icon_color: Int
+    val icon_color: String
 )

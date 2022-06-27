@@ -7,7 +7,6 @@ import com.example.financemanager.utils.Converter
 import java.time.LocalDate
 
 @Entity
-@TypeConverters(Converter::class)
 data class DayInfo(
     @ColumnInfo(name = "date")
     val transactionDate: LocalDate,

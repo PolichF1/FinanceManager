@@ -1,5 +1,6 @@
 package com.example.financemanager.di.modules
 
+import com.example.financemanager.data.repositories.AccountsRepository
 import com.example.financemanager.data.repositories.TransactionsRepository
 import com.example.financemanager.data.useCases.*
 import com.example.financemanager.dataBase.AppDataBase
@@ -22,15 +23,15 @@ object TransactionsModule {
 
     @Provides
     @Singleton
-    fun providesTransactionsUseCases(repository: TransactionsRepository): TransactionUseCases {
+    fun providesTransactionsUseCases(
+        transactionsRepository: TransactionsRepository,
+        accountsRepository: AccountsRepository
+    ): TransactionUseCases {
         return TransactionUseCases(
-            getTransaction = GetTransaction(repository),
-            getTransactionViews = GetTransactionViews(repository),
-//            getTransactions = GetTransactions(repository),
-            addTransaction = AddTransaction(repository),
-            updateTransaction = UpdateTransaction(repository),
-            deleteTransaction = DeleteTransaction(repository),
-            getTransactionListForRecyclerView = GetTransactionListFotRecyclerView(repository)
+            getTransactionViews = GetTransactionViews(transactionsRepository),
+            addTransaction = AddTransaction(transactionsRepository, accountsRepository),
+            getTransactionListWithDayInfo = GetTransactionListWithAmountsPerDay(transactionsRepository),
+            deleteTransactionById = DeleteTransactionById(transactionsRepository, accountsRepository)
         )
     }
 

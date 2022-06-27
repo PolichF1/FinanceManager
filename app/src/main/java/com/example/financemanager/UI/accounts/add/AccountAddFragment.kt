@@ -1,6 +1,8 @@
 package com.example.financemanager.UI.accounts.add
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
@@ -16,7 +18,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.databinding.FragmentAccountAddBinding
-import com.example.financemanager.utils.mapOfColors
+import com.example.financemanager.utils.PRIMARY_COLOR
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -32,6 +34,8 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
+        var color = PRIMARY_COLOR
+
         val colorId = ImageViewCompat.getImageTintList(binding.selectedColor)?.defaultColor
         colorClickListener()
 
@@ -44,7 +48,7 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
                             name = binding.nameTextField.editText?.text.toString(),
                             amount = binding.amountTextField.editText?.text.toString()
                                 .toDoubleOrNull() ?: 0.0,
-                            color = mapOfColors[colorId] ?: R.color.orange_red
+                            color = color
                         )
                         viewModel.addAccount(account)
                         if (getCurrentDestination() == this@AccountAddFragment.javaClass.name) {
@@ -54,11 +58,9 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
                     is AccountAddViewModel.Event.SelectColor -> {
                         DrawableCompat.setTint(
                             binding.selectedColor.drawable,
-                            ContextCompat.getColor(
-                                requireContext(),
-                                mapOfColors[event.id] ?: R.color.orange_red
-                            )
+                            Color.parseColor(event.color)
                         )
+                        color = event.color
                     }
                 }
             }
@@ -66,6 +68,9 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
     }
 
     private fun colorClickListener() {
+
+        Log.d("!!!!", "CLICKLISTENER")
+
         binding.color0.setOnClickListener { viewModel.selectColorClick(it as ImageView) }
         binding.color1.setOnClickListener { viewModel.selectColorClick(it as ImageView) }
         binding.color2.setOnClickListener { viewModel.selectColorClick(it as ImageView) }

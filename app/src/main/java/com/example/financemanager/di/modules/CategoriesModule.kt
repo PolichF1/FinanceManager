@@ -24,12 +24,7 @@ object CategoriesModule {
     @Singleton
     fun providesCategoriesUseCases(repository: CategoriesRepository): CategoryUseCases {
         return CategoryUseCases(
-            getCategory = GetCategory(repository),
             getCategoryViews = GetCategoryViews(repository),
-//            getCategories = GetCategories(repository),
-            addCategory = AddCategory(repository),
-            updateCategory = UpdateCategory(repository),
-            deleteCategory = DeleteCategory(repository)
         )
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="12dp">
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/icon_background"
@@ -18,8 +18,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
         app:layout_constraintBottom_toBottomOf="@+id/icon_background"
         app:layout_constraintEnd_toEndOf="@+id/icon_background"
         app:layout_constraintStart_toStartOf="@+id/icon_background"
@@ -62,9 +62,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
         android:textAllCaps="true"
-        android:textStyle=""
         android:textColor="@color/red"
         android:textSize="18sp"
+        android:textStyle=""
         app:layout_constraintEnd_toStartOf="@+id/text_currency"
         app:layout_constraintTop_toTopOf="@+id/category_name"
         tools:text="–1 817,20" />
@@ -79,5 +79,26 @@
         app:layout_constraintBottom_toBottomOf="@+id/text_amount"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="BYN" />
+
+    <TextView
+        android:id="@+id/note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/text_currency"
+        app:layout_constraintTop_toTopOf="@+id/cardName"
+        tools:text="Note" />
+
+    <ImageView
+        android:id="@+id/delete_button"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_delete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

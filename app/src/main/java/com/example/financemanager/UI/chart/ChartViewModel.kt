@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.useCases.CategoryUseCases
-import com.example.financemanager.data.useCases.TransactionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 
@@ -19,37 +19,40 @@ class ChartViewModel @Inject constructor(
     private val categoryUseCases: CategoryUseCases
 ) : ViewModel() {
 
-    private val _categoriesWithAmount = MutableStateFlow(emptyList<CategoryView>())
-    val categoriesWithAmount = _categoriesWithAmount.asStateFlow()
-
-    private var getCategoriesWithAmountJob: Job? = null
+    private val _categoryViews = MutableStateFlow(emptyList<CategoryView>())
+    val categoryViews = _categoryViews.asStateFlow()
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
+    private var getCategoriesWithAmountJob: Job? = null
+
     init {
-        getCategoriesWithAmount()
+        getCategoryView()
     }
 
-    private fun getCategoriesWithAmount() {
+    private fun getCategoryView(from: LocalDate? = null, to: LocalDate? = null) {
         getCategoriesWithAmountJob?.cancel()
-        getCategoriesWithAmountJob = categoryUseCases.getCategoryViews()
-            .onEach { categories -> _categoriesWithAmount.value = categories }
+        getCategoriesWithAmountJob =
+            categoryUseCases.getCategoryViews(from, to)
+            .onEach { categories -> _categoryViews.value = categories }
             .launchIn(viewModelScope)
     }
 
-    fun getPreferences() = sharedPreferences
+    fun setDateRange(from: LocalDate?, to: LocalDate?) {
+        getCategoryView(from, to)
+    }
 
-    fun selectDateCLick() {
+    fun selectDateClick() {
         viewModelScope.launch {
             _events.emit(Event.SelectDate)
         }
     }
 
-
+    fun getPreferences() = sharedPreferences
 
     sealed class Event {
-        object SelectDate: Event()
+        object SelectDate : Event()
     }
 
 }

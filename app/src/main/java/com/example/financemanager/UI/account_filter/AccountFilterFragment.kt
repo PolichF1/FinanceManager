@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.account_filter
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -16,7 +17,7 @@ import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
 import com.example.financemanager.UI.accounts.AccountsRecyclerAdapter
 import com.example.financemanager.databinding.DialogFragmentAccountFilterBinding
-import com.example.financemanager.utils.mapOfColors
+import com.example.financemanager.utils.PRIMARY_COLOR
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -48,10 +49,7 @@ class AccountFilterFragment : DialogFragment(R.layout.dialog_fragment_account_fi
 
         DrawableCompat.setTint(
             binding.allAccountsIconColor.drawable,
-            ContextCompat.getColor(
-                requireContext(),
-                mapOfColors[activityViewModel.currentAccount.value?.color] ?: R.color.orange_red
-            )
+            Color.parseColor(activityViewModel.currentAccount.value?.color ?: PRIMARY_COLOR)
         )
 
         binding.allAccountsItem.setOnClickListener {

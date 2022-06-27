@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.currentAccount.collectLatest { account ->
+                binding.bankIcon.visibility = if (account != null) View.VISIBLE else View.GONE
                 binding.toolbarTitle.text = account?.name ?: getString(R.string.all_accounts)
             }
         }
@@ -83,10 +84,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 binding.toolbarSubtitle.text =
                     if (it.first == null && it.second == null)
                         getString(R.string.all_time)
-                    else if (it.first == it.second)
-                        it.first?.format(pattern)
+                    else if (it.second == null)
+                        "${it.first?.format(pattern)} - ${getCurrentLocalDate().format(pattern)}"
                     else
-                        "${it.first?.format(pattern)} - ${it.second?.format(pattern)}"
+                        it.first?.format(pattern)
             }
         }
 
@@ -99,28 +100,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            val isAddOrEditFragment = when (currentDestination) {
+            val isFragmentWithoutSettings = when (currentDestination) {
                 R.id.account_add_fragment -> true
                 R.id.account_edit_fragment -> true
                 else -> false
             }
 
             binding.bottomNavigation.visibility =
-                if (isAddOrEditFragment) View.GONE else View.VISIBLE
+                if (isFragmentWithoutSettings) View.GONE else View.VISIBLE
             binding.buttonSettings.visibility =
-                if (isAddOrEditFragment) View.GONE else View.VISIBLE
+                if (isFragmentWithoutSettings) View.GONE else View.VISIBLE
             binding.toolbarInfoBox.visibility =
-                if (isAddOrEditFragment) View.GONE else View.VISIBLE
-            supportActionBar?.setDisplayShowTitleEnabled(isAddOrEditFragment)
+                if (isFragmentWithoutSettings) View.GONE else View.VISIBLE
+            supportActionBar?.setDisplayShowTitleEnabled(isFragmentWithoutSettings)
 
-            val isAccountsFragment = when (currentDestination) {
+            val isFragmentWithoutAccountsFilter = when (currentDestination) {
                 R.id.accounts_fragment -> true
                 R.id.account_actions_sheet_fragment -> true
                 else -> false
             }
 
-            binding.moreButton.visibility = if (isAccountsFragment) View.GONE else View.VISIBLE
-            binding.toolbarInfoBox.isEnabled = !isAccountsFragment
+            binding.moreButton.visibility = if (isFragmentWithoutAccountsFilter) View.INVISIBLE else View.VISIBLE
+            binding.toolbarInfoBox.isEnabled = !isFragmentWithoutAccountsFilter
         }
     }
 

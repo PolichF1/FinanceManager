@@ -25,7 +25,7 @@ import java.time.LocalTime
         )
     ]
 )
-@TypeConverters(Converter::class)
+
 data class Transaction(
 
     @PrimaryKey(autoGenerate = true)

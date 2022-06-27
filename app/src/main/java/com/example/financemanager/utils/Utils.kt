@@ -23,4 +23,6 @@ fun Long.toLocalDate(): LocalDate =
 
 fun LocalDate.toMilliseconds(): Long = this.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
 
+fun String.asLocalDate(): LocalDate = LocalDate.parse(this)
+
 const val DAY_IN_MS = 1000 * 60 * 60 * 24

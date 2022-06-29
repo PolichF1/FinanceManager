@@ -9,10 +9,10 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.R
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.databinding.AccountItemBinding
-import com.example.financemanager.toAmountFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -60,7 +60,7 @@ class AccountsRecyclerAdapter @Inject constructor(
 
     companion object DIFF_CALLBACK : DiffUtil.ItemCallback<Account>() {
         override fun areItemsTheSame(oldItem: Account, newItem: Account): Boolean {
-            return oldItem == newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Account, newItem: Account): Boolean {

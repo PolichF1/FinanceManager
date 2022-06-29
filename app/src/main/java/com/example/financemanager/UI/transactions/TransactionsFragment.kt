@@ -61,7 +61,13 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.transactionsWithDayInfo.collectLatest {
-                transactionAdapter.updateData(it)
+                transactionAdapter.submitList(it)
+
+                binding.noTransactionImage.visibility =
+                    if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
+
+                binding.noTransactionText.visibility =
+                    if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             }
         }
 

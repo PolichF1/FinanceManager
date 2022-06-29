@@ -12,11 +12,8 @@ import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.financemanager.R
-import com.example.financemanager.UI.transactions.add.select_category.CategoriesRecyclerAdapter
 import com.example.financemanager.data.models.Transaction
 import com.example.financemanager.databinding.FragmentAddTransactionSheetBinding
-import com.example.financemanager.toAmountFormat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

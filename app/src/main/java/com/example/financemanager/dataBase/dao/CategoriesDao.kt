@@ -1,7 +1,6 @@
 package com.example.financemanager.dataBase.dao
 
 import androidx.room.*
-import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.CategoryView
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

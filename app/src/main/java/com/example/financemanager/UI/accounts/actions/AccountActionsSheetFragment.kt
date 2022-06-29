@@ -13,9 +13,9 @@ import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountActionsSheetBinding
-import com.example.financemanager.toAmountFormat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

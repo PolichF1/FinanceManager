@@ -2,9 +2,8 @@ package com.example.financemanager.data.models
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import com.example.financemanager.getCurrentLocalDate
-import com.example.financemanager.getCurrentLocalTime
-import com.example.financemanager.utils.Converter
+import com.example.financemanager.DateUtils.getCurrentLocalDate
+import com.example.financemanager.DateUtils.getCurrentLocalTime
 import java.time.LocalDate
 import java.time.LocalTime
 

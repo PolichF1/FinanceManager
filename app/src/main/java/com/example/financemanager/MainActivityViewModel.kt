@@ -3,6 +3,7 @@ package com.example.financemanager
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.useCases.AccountsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel

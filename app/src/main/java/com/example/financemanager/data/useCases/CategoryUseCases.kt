@@ -1,10 +1,9 @@
 package com.example.financemanager.data.useCases
 
-import com.example.financemanager.asLocalDate
-import com.example.financemanager.data.models.Category
+import com.example.financemanager.DateUtils.asLocalDate
+import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.repositories.CategoriesRepository
-import com.example.financemanager.getCurrentLocalDate
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

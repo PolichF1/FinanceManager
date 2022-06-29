@@ -15,12 +15,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountsBinding
-import com.example.financemanager.toAmountFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint

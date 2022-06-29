@@ -1,16 +1,17 @@
 package com.example.financemanager.UI.transactions.add.date_pick
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.*
+import com.example.financemanager.DateUtils.DAY_IN_MS
+import com.example.financemanager.DateUtils.getCurrentLocalDate
+import com.example.financemanager.DateUtils.toLocalDate
+import com.example.financemanager.DateUtils.toMilliseconds
 import com.example.financemanager.databinding.FragmentSelectDateDialogBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint

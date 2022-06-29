@@ -17,9 +17,7 @@ import com.example.financemanager.databinding.CategoryItemBinding
 import com.example.financemanager.utils.mapOfDrawables
 import javax.inject.Inject
 
-class CategoriesRecyclerAdapter @Inject constructor(
-    private val context: Context
-) : ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK){
+class CategoriesRecyclerAdapter : ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK){
 
     private var onClickListener: OnClickListener? = null
 
@@ -54,7 +52,7 @@ class CategoriesRecyclerAdapter @Inject constructor(
 
     companion object DIFF_CALLBACK : DiffUtil.ItemCallback<CategoryView>() {
         override fun areItemsTheSame(oldItem: CategoryView, newItem: CategoryView): Boolean {
-            return oldItem == newItem
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: CategoryView, newItem: CategoryView): Boolean {

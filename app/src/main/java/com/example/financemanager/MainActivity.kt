@@ -3,7 +3,6 @@ package com.example.financemanager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.UI.accounts.AccountsFragmentDirections
 import com.example.financemanager.UI.chart.ChartFragmentDirections
 import com.example.financemanager.databinding.ActivityMainBinding
@@ -126,17 +126,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     override fun onStart() {
-        val theme = viewModel.getPreferences().getString(
-            "theme",
-            resources.getStringArray(R.array.theme_values)[2]
-        )
-
+        val nightMode = viewModel.getPreferences().getBoolean("night_mode", false)
         AppCompatDelegate.setDefaultNightMode(
-            when (theme) {
-                "light" -> AppCompatDelegate.MODE_NIGHT_NO
-                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
-                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-            }
+            if (nightMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
         super.onStart()
     }

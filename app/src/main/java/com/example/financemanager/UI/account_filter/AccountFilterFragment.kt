@@ -3,7 +3,6 @@ package com.example.financemanager.UI.account_filter
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.DialogFragment
@@ -13,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
 import com.example.financemanager.UI.accounts.AccountsRecyclerAdapter
@@ -63,7 +63,7 @@ class AccountFilterFragment : DialogFragment(R.layout.dialog_fragment_account_fi
                 var amount = 0.0
                 newList.forEach { amount += it.amount }
 
-                binding.allAccountsAmount.text = amount.toString()
+                binding.allAccountsAmount.text = amount.toAmountFormat(withMinus = false)
             }
         }
 

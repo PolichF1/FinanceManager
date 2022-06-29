@@ -5,23 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
-import com.example.financemanager.data.models.Transaction
-import com.example.financemanager.databinding.FragmentAccountActionsSheetBinding
 import com.example.financemanager.databinding.FragmentSelectCategorySheetBinding
-import com.example.financemanager.toAmountFormat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SelectCategorySheetFragment : BottomSheetDialogFragment() {
@@ -32,8 +28,9 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
     private val viewModel: SelectCategoryViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by viewModels()
 
-    @Inject
-    lateinit var categoriesRVAdapter: CategoriesRecyclerAdapter
+    private val categoriesRecyclerAdapter by lazy {
+        CategoriesRecyclerAdapter()
+    }
 
     private val args by navArgs<SelectCategorySheetFragmentArgs>()
 
@@ -60,17 +57,17 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
             Color.parseColor(account.color)
         )
 
-        categoriesRVAdapter.setOnClickListener(CategoriesRecyclerAdapter.OnClickListener {
+        categoriesRecyclerAdapter.setOnClickListener(CategoriesRecyclerAdapter.OnClickListener {
             viewModel.selectCategoryClick(account, it)
         })
 
         binding.gridOfCategories.apply {
-            adapter = categoriesRVAdapter
+            adapter = categoriesRecyclerAdapter
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.categoryViews.collectLatest { newList ->
-                categoriesRVAdapter.submitList(newList)
+                categoriesRecyclerAdapter.submitList(newList)
             }
         }
 

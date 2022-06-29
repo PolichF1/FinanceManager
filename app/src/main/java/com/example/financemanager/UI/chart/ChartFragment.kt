@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,12 +14,13 @@ import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.databinding.CategoryItemBinding
 import com.example.financemanager.databinding.FragmentChartBinding
-import com.example.financemanager.toAmountFormat
+import com.example.financemanager.utils.PRIMARY_COLOR
 import com.example.financemanager.utils.mapOfDrawables
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
@@ -83,11 +83,18 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         val colors = ArrayList<Int>()
 
         categoryViews.forEach { category ->
-            colors.add(Color.parseColor(category.iconColor))
-
-            entries.add(PieEntry(category.amount.toFloat()))
-            amount += category.amount
+            if (category.amount != 0.0) {
+                entries.add(PieEntry(category.amount.toFloat()))
+                colors.add(Color.parseColor(category.iconColor))
+                amount += category.amount
+            }
         }
+
+        if (amount == 0.0) {
+            entries.add(PieEntry(1f))
+            colors.add(Color.parseColor(PRIMARY_COLOR))
+            binding.chart.alpha = 0.3f
+        } else binding.chart.alpha = 1f
 
         val dataSet = PieDataSet(entries, "")
         dataSet.colors = colors
@@ -102,6 +109,7 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
             setCenterTextSize(20f)
             description.isEnabled = false
             legend.isEnabled = false
+
             data = PieData(dataSet)
         }
 

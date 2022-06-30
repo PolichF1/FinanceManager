@@ -57,6 +57,11 @@ class AccountFilterFragment : DialogFragment(R.layout.dialog_fragment_account_fi
             dismiss()
         }
 
+        accountsAdapter.setOnClickListener(AccountsRecyclerAdapter.OnClickListener {
+            viewModel.selectAccount(it)
+            dismiss()
+        })
+
         lifecycleScope.launchWhenStarted {
             viewModel.accounts.collectLatest { newList ->
                 accountsAdapter.submitList(newList)
@@ -68,17 +73,18 @@ class AccountFilterFragment : DialogFragment(R.layout.dialog_fragment_account_fi
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collectLatest { event ->
-                when (event) {
+            viewModel.events.collectLatest {
+                when (it) {
                     is AccountFilterViewModel.Event.SelectAccount -> {
-                        activityViewModel.setCurrentAccount(event.account)
+                        activityViewModel.setCurrentAccount(it.account)
                     }
                 }
             }
         }
+
     }
 
-    private fun getDivider() = DividerItemDecoration (
+    private fun getDivider() = DividerItemDecoration(
         requireContext(),
         DividerItemDecoration.VERTICAL
     ).apply {

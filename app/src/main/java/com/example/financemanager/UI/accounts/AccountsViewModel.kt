@@ -4,8 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountsUseCases
-import com.example.financemanager.data.useCases.CategoryUseCases
+import com.example.financemanager.data.useCases.AccountUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -16,16 +15,16 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val accountUseCase: AccountsUseCases
+    private val accountUseCase: AccountUseCases
 ) : ViewModel() {
+
+    private var getAccountsJob: Job? = null
 
     private val _accounts = MutableStateFlow(emptyList<Account>())
     val accounts = _accounts.asStateFlow()
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
-
-    private var getAccountsJob: Job? = null
 
     init {
         getAccounts()
@@ -34,13 +33,15 @@ class AccountsViewModel @Inject constructor(
     private fun getAccounts() {
         getAccountsJob?.cancel()
         getAccountsJob = accountUseCase.getAccounts()
-            .onEach { accounts -> _accounts.value = accounts }
+            .onEach { accounts ->
+                _accounts.value = accounts
+            }
             .launchIn(viewModelScope)
     }
 
     fun selectAccount(account: Account) {
         viewModelScope.launch {
-            _events.emit(Event.OpenAccountActionSheet(account))
+            _events.emit(Event.OpenTheAccountActionsSheet(account))
         }
     }
 
@@ -52,8 +53,8 @@ class AccountsViewModel @Inject constructor(
 
     fun getPreferences() = sharedPreferences
 
-    sealed class Event() {
+    sealed class Event {
         object NavigateToAddAccountScreen : Event()
-        data class OpenAccountActionSheet (val account: Account) : Event()
+        data class OpenTheAccountActionsSheet(val account: Account) : Event()
     }
 }

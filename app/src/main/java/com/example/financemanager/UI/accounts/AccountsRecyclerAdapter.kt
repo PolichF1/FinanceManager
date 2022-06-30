@@ -28,9 +28,8 @@ class AccountsRecyclerAdapter @Inject constructor(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(account: Account) {
-            binding.title.text = account.name
+            binding.name.text = account.name
             binding.amount.text = account.amount.toAmountFormat(withMinus = false)
-
             binding.currency.text = sharedPreferences.getString(
                 "currency",
                 context.resources.getStringArray(R.array.currency_values)[0]
@@ -57,7 +56,6 @@ class AccountsRecyclerAdapter @Inject constructor(
         holder.bind(getItem(position))
     }
 
-
     companion object DIFF_CALLBACK : DiffUtil.ItemCallback<Account>() {
         override fun areItemsTheSame(oldItem: Account, newItem: Account): Boolean {
             return oldItem.id == newItem.id
@@ -69,10 +67,10 @@ class AccountsRecyclerAdapter @Inject constructor(
     }
 
     fun setOnClickListener(onClickListener: OnClickListener) {
-        this.onClickListener = onClickListener
+        this.onClickListener = onClickListener;
     }
 
-    class OnClickListener(val clickListener : (account: Account) -> Unit) {
+    class OnClickListener(val clickListener: (account: Account) -> Unit) {
         fun onClick(account: Account) = clickListener(account)
     }
 }

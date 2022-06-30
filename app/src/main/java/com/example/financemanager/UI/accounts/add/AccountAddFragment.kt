@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -36,13 +34,11 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
 
         var color = PRIMARY_COLOR
 
-        val colorId = ImageViewCompat.getImageTintList(binding.selectedColor)?.defaultColor
         colorClickListener()
 
-
-        lifecycleScope.launchWhenCreated {
-            viewModel.events.collectLatest { event ->
-                when (event) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collectLatest {
+                when (it) {
                     is AccountAddViewModel.Event.AddAccount -> {
                         val account = Account(
                             name = binding.nameTextField.editText?.text.toString(),
@@ -51,16 +47,16 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
                             color = color
                         )
                         viewModel.addAccount(account)
-                        if (getCurrentDestination() == this@AccountAddFragment.javaClass.name) {
+
+                        if (getCurrentDestination() == this@AccountAddFragment.javaClass.name)
                             findNavController().navigate(AccountAddFragmentDirections.actionAccountAddFragmentToAccountsFragment())
-                        }
                     }
                     is AccountAddViewModel.Event.SelectColor -> {
                         DrawableCompat.setTint(
                             binding.selectedColor.drawable,
-                            Color.parseColor(event.color)
+                            Color.parseColor(it.color)
                         )
-                        color = event.color
+                        color = it.color
                     }
                 }
             }
@@ -68,8 +64,7 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
     }
 
     private fun colorClickListener() {
-
-        Log.d("!!!!", "CLICKLISTENER")
+        Log.d("!!!", "clickListener")
 
         binding.color0.setOnClickListener { viewModel.selectColorClick(it as ImageView) }
         binding.color1.setOnClickListener { viewModel.selectColorClick(it as ImageView) }
@@ -97,7 +92,6 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
         if (item.itemId == R.id.apply) {
             viewModel.applyButtonClick()
         }
-
         return super.onOptionsItemSelected(item)
     }
 

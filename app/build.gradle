@@ -43,10 +43,18 @@ android {
     kapt {
         generateStubs = true
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src\\main\\assets'
+            }
+        }
+    }
 }
 
 dependencies {
 
+    implementation 'androidx.preference:preference-ktx:1.2.0'
     def lifecycle_version = "2.5.0-rc01"
     def room_version = "2.4.2"
 

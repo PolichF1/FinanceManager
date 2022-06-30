@@ -23,9 +23,7 @@ abstract class AppDataBase : RoomDatabase() {
     abstract val categoriesDao: CategoriesDao
     abstract val transactionsDao: TransactionsDao
 
-
-
     companion object {
-        const val APP_DATABASE_NAME = "finance_manager_db"
+        const val APP_DATABASE_NAME = "money_manager_db"
     }
 }

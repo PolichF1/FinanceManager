@@ -13,4 +13,5 @@ class CategoriesRepositoryImpl(
     override fun getCategoryViews(from: LocalDate, to: LocalDate): Flow<List<CategoryView>> {
         return dao.getCategoryViews(from, to)
     }
+
 }

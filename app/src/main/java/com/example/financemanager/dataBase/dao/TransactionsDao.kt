@@ -10,7 +10,6 @@ import java.time.LocalDate
 @Dao
 interface TransactionsDao {
 
-
     @Query("SELECT transactions.id, transactions.note, transactions.amount, transactions.date, transactions.time, categories.id AS category_id, categories.name AS category_name, accounts.id AS account_id, accounts.name AS account_name, categories.icon, categories.icon_color FROM transactions JOIN accounts ON accounts.id = transactions.account_id JOIN categories ON categories.id = transactions.category_id WHERE date >= :from AND date <= :to ORDER BY date ASC, time ASC")
     fun getTransactionViews(from: LocalDate, to: LocalDate): Flow<List<TransactionView>>
 
@@ -22,5 +21,4 @@ interface TransactionsDao {
 
     @Query("DELETE FROM transactions WHERE id = :id")
     suspend fun deleteTransactionById(id: Int)
-
 }

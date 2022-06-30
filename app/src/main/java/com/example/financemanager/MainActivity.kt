@@ -15,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.UI.accounts.AccountsFragmentDirections
 import com.example.financemanager.UI.chart.ChartFragmentDirections
+import com.example.financemanager.UI.transactions.TransactionsFragmentDirections
 import com.example.financemanager.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -38,7 +39,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         var currentDestination: Int? = null
 
@@ -51,20 +52,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collectLatest { event ->
-                when (event) {
-                    is MainActivityViewModel.Event.OpenSettingsScreen -> {
+            viewModel.events.collectLatest {
+                when (it) {
+                    is MainActivityViewModel.Event.OpenTheSettingsScreen -> {
                         when (currentDestination) {
                             R.id.accounts_fragment -> navController.navigate(
                                 AccountsFragmentDirections.actionAccountsFragmentToSettingsActivity()
                             )
+                            R.id.transactions_fragment -> navController.navigate(
+                                TransactionsFragmentDirections.actionTransactionsFragmentToSettingsActivity()
+                            )
                             R.id.chart_fragment -> navController.navigate(
                                 ChartFragmentDirections.actionChartFragmentToSettingsActivity()
                             )
-
                         }
                     }
-                    is MainActivityViewModel.Event.OpenSelectAccountDialog -> {
+                    is MainActivityViewModel.Event.OpenTheSelectAccountDialog -> {
                         navController.navigate(R.id.action_dialog_fragment_account_filter)
                     }
                 }
@@ -72,9 +75,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.currentAccount.collectLatest { account ->
-                binding.bankIcon.visibility = if (account != null) View.VISIBLE else View.GONE
-                binding.toolbarTitle.text = account?.name ?: getString(R.string.all_accounts)
+            viewModel.currentAccount.collectLatest {
+                binding.bankIcon.visibility = if (it != null) View.VISIBLE else View.INVISIBLE
+                binding.toolbarTitle.text = it?.name ?: getString(R.string.all_accounts)
             }
         }
 
@@ -94,25 +97,25 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.accounts_fragment, R.id.transactions_fragment, R.id.chart_fragment)
         )
-
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigation.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            currentDestination = destination.id
 
-            val isFragmentWithoutSettings = when (currentDestination) {
+            val isFragmentWithoutSettingsButton = when (currentDestination) {
                 R.id.account_add_fragment -> true
                 R.id.account_edit_fragment -> true
                 else -> false
             }
 
             binding.bottomNavigation.visibility =
-                if (isFragmentWithoutSettings) View.GONE else View.VISIBLE
+                if (isFragmentWithoutSettingsButton) View.GONE else View.VISIBLE
             binding.buttonSettings.visibility =
-                if (isFragmentWithoutSettings) View.GONE else View.VISIBLE
+                if (isFragmentWithoutSettingsButton) View.GONE else View.VISIBLE
             binding.toolbarInfoBox.visibility =
-                if (isFragmentWithoutSettings) View.GONE else View.VISIBLE
-            supportActionBar?.setDisplayShowTitleEnabled(isFragmentWithoutSettings)
+                if (isFragmentWithoutSettingsButton) View.GONE else View.VISIBLE
+            supportActionBar?.setDisplayShowTitleEnabled(isFragmentWithoutSettingsButton)
 
             val isFragmentWithoutAccountsFilter = when (currentDestination) {
                 R.id.accounts_fragment -> true
@@ -120,7 +123,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 else -> false
             }
 
-            binding.moreButton.visibility = if (isFragmentWithoutAccountsFilter) View.INVISIBLE else View.VISIBLE
+            binding.moreButton.visibility =
+                if (isFragmentWithoutAccountsFilter) View.INVISIBLE else View.VISIBLE
             binding.toolbarInfoBox.isEnabled = !isFragmentWithoutAccountsFilter
         }
     }

@@ -12,20 +12,19 @@ class TransactionsRepositoryImpl(
     private val dao: TransactionsDao
 ) : TransactionsRepository {
 
+    override fun getTransactionViews(from: LocalDate, to: LocalDate): Flow<List<TransactionView>> {
+        return dao.getTransactionViews(from, to)
+    }
 
     override fun getTransactionAmountsPerDay(from: LocalDate, to: LocalDate): Flow<List<DayInfo>> {
         return dao.getTransactionAmountsPerDay(from, to)
     }
 
-    override fun getTransactionViews(from: LocalDate, to: LocalDate): Flow<List<TransactionView>> {
-        return dao.getTransactionViews(from, to)
-    }
-
     override suspend fun insertTransaction(transaction: Transaction) {
-        return dao.insertTransaction(transaction)
+        dao.insertTransaction(transaction)
     }
 
     override suspend fun deleteTransactionById(id: Int) {
-        return dao.deleteTransactionById(id)
+        dao.deleteTransactionById(id)
     }
 }

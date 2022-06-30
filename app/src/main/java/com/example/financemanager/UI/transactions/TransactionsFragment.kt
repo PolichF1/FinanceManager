@@ -55,7 +55,7 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
             )
         }
 
-        transactionAdapter.setOnDeleteClickListener(TransactionsRecyclerAdapter.OnDeleteClickListener{
+        transactionAdapter.setOnDeleteClickListener(TransactionsRecyclerAdapter.OnDeleteClickListener {
             viewModel.deleteButtonClick(it)
         })
 
@@ -65,7 +65,6 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
                 binding.noTransactionImage.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-
                 binding.noTransactionText.visibility =
                     if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             }
@@ -80,7 +79,7 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
         lifecycleScope.launchWhenStarted {
             viewModel.events.collectLatest {
                 when (it) {
-                    is TransactionsViewModel.Event.OpenAddTransactionSheet -> {
+                    is TransactionsViewModel.Event.OpenTheAddTransactionSheet -> {
                         if (getCurrentDestination() == this@TransactionsFragment.javaClass.name) {
                             findNavController().navigate(
                                 TransactionsFragmentDirections.actionTransactionsFragmentToSelectCategorySheetFragment(
@@ -96,10 +95,10 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
                             )
                         }
                     }
-                    is TransactionsViewModel.Event.ShowDeleteTransactionDialog -> {
-                       if (!alertIsShowing) {
-                           showAlertDialog(it.transaction)
-                       }
+                    is TransactionsViewModel.Event.ShowTheDeleteTransactionDialog -> {
+                        if (!alertIsShowing) {
+                            showAlertDialog(it.transaction)
+                        }
                     }
                     is TransactionsViewModel.Event.DeleteTransaction -> {
                         viewModel.deleteTransaction(it.transaction)
@@ -116,10 +115,10 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
         val alert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setIcon(R.drawable.ic_warning)
-            .setTitle("Do you really want to delete this transaction? ")
+            .setTitle("Do you really to delete this transaction? ")
             .setMessage("From: ${transaction.categoryName}\nTo: ${transaction.accountName}\nAmount: ${transaction.amount}")
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                viewModel.deleteConfirmButtonClick(transaction)
+                viewModel.deleteConfirmationButtonClick(transaction)
                 transactionAdapter.clearSelectedPosition()
                 alertIsShowing = false
             }

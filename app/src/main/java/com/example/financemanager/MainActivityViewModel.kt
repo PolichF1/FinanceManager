@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountsUseCases
+import com.example.financemanager.data.useCases.AccountUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val accountsUseCases: AccountsUseCases
+    private val accountUseCases: AccountUseCases
 ) : ViewModel() {
 
     private val _accounts = MutableStateFlow(emptyList<Account>())
@@ -33,16 +33,15 @@ class MainActivityViewModel @Inject constructor(
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
-    private var getAccountJob: Job? = null
+    private var getAccountsJob: Job? = null
 
     init {
         getAccounts()
     }
 
-
     private fun getAccounts() {
-        getAccountJob?.cancel()
-        getAccountJob = accountsUseCases.getAccounts()
+        getAccountsJob?.cancel()
+        getAccountsJob = accountUseCases.getAccounts()
             .onEach { accounts ->
                 _accounts.value = accounts
             }
@@ -51,13 +50,13 @@ class MainActivityViewModel @Inject constructor(
 
     fun settingsButtonClick() {
         viewModelScope.launch {
-            _events.emit(Event.OpenSettingsScreen)
+            _events.emit(Event.OpenTheSettingsScreen)
         }
     }
 
     fun selectAccountButtonClick() {
         viewModelScope.launch {
-            _events.emit(Event.OpenSelectAccountDialog)
+            _events.emit(Event.OpenTheSelectAccountDialog)
         }
     }
 
@@ -76,8 +75,7 @@ class MainActivityViewModel @Inject constructor(
     fun getPreferences() = sharedPreferences
 
     sealed class Event {
-        object OpenSettingsScreen : Event()
-        object OpenSelectAccountDialog : Event()
+        object OpenTheSettingsScreen : Event()
+        object OpenTheSelectAccountDialog : Event()
     }
-
 }

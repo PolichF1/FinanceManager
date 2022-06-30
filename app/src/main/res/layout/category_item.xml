@@ -5,7 +5,7 @@
     android:id="@+id/item"
     android:layout_width="106dp"
     android:layout_height="wrap_content"
-    android:layout_margin="4sp">
+    android:layout_margin="4dp">
 
     <TextView
         android:id="@+id/name"
@@ -14,13 +14,12 @@
         android:layout_marginBottom="2dp"
         android:ellipsize="marquee"
         android:gravity="center"
-        tools:text="Category"
         android:textColor="@color/black"
         android:textSize="12sp"
-    app:layout_constraintBottom_toTopOf="@+id/icon_background"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/icon_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Category" />
 
     <ImageView
         android:id="@+id/icon_background"
@@ -58,8 +57,7 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/icon_background"
-        tools:text="8"
-        tools:ignore="UnknownIdInLayout" />
+        tools:text="8" />
 
     <TextView
         android:id="@+id/currency"
@@ -74,6 +72,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/amount"
         tools:text="BYN" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

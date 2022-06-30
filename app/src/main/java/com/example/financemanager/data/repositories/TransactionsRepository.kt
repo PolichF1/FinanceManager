@@ -8,7 +8,6 @@ import java.time.LocalDate
 
 interface TransactionsRepository {
 
-
     fun getTransactionViews(from: LocalDate, to: LocalDate): Flow<List<TransactionView>>
 
     fun getTransactionAmountsPerDay(from: LocalDate, to: LocalDate): Flow<List<DayInfo>>
@@ -16,5 +15,4 @@ interface TransactionsRepository {
     suspend fun insertTransaction(transaction: Transaction)
 
     suspend fun deleteTransactionById(id: Int)
-
 }

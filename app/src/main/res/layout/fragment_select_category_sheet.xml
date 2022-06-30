@@ -80,5 +80,3 @@
         tools:listitem="@layout/category_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

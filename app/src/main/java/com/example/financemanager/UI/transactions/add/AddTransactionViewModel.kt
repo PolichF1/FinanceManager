@@ -15,15 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTransactionViewModel @Inject constructor(
-    private val transactionsUseCases: TransactionUseCases
+    private val transactionUseCases: TransactionUseCases
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
-
     suspend fun addTransaction(transaction: Transaction) {
-        transactionsUseCases.addTransaction(transaction)
+        transactionUseCases.addTransaction(transaction)
     }
 
     fun applyButtonClick() {
@@ -32,8 +31,8 @@ class AddTransactionViewModel @Inject constructor(
         }
     }
 
-
     sealed class Event {
-        object AddTransaction: Event()
+        object AddTransaction : Event()
     }
+
 }

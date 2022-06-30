@@ -24,7 +24,7 @@ class SelectCategoryViewModel @Inject constructor(
 
     private var getCategoryViewsJob: Job? = null
 
-    private var _categoryViews = MutableStateFlow(emptyList<CategoryView>())
+    private val _categoryViews = MutableStateFlow(emptyList<CategoryView>())
     val categoryViews = _categoryViews.asStateFlow()
 
     private val _events = MutableSharedFlow<Event>()
@@ -36,14 +36,13 @@ class SelectCategoryViewModel @Inject constructor(
 
     private fun getCategoryViews(from: LocalDate? = null, to: LocalDate? = null) {
         getCategoryViewsJob?.cancel()
-        getCategoryViewsJob = categoryUseCases.getCategoryViews(from, to)
-            .onEach { categories ->
-                _categoryViews.value = categories
-            }
-            .launchIn(viewModelScope)
+        getCategoryViewsJob =
+            categoryUseCases.getCategoryViews(from, to)
+                .onEach { categories -> _categoryViews.value = categories }
+                .launchIn(viewModelScope)
     }
 
-    fun setDataRange(from: LocalDate?, to: LocalDate?) {
+    fun setDateRange(from: LocalDate?, to: LocalDate?) {
         getCategoryViews(from, to)
     }
 
@@ -58,5 +57,4 @@ class SelectCategoryViewModel @Inject constructor(
     sealed class Event {
         data class SelectCategory(val account: Account, val category: CategoryView) : Event()
     }
-
 }

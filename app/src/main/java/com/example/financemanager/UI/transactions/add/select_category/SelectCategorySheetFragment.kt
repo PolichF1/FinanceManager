@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
@@ -26,9 +27,9 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SelectCategoryViewModel by viewModels()
-    private val activityViewModel: MainActivityViewModel by viewModels()
+    private val activityViewModel: MainActivityViewModel by activityViewModels()
 
-    private val categoriesRecyclerAdapter by lazy {
+    private val categoriesRVAdapter by lazy {
         CategoriesRecyclerAdapter()
     }
 
@@ -53,27 +54,25 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
             "currency",
             requireContext().resources.getStringArray(R.array.currency_values)[0]
         )
-        binding.actionsContainer.setBackgroundColor(
-            Color.parseColor(account.color)
-        )
+        binding.actionsContainer.setBackgroundColor(Color.parseColor(account.color))
 
-        categoriesRecyclerAdapter.setOnClickListener(CategoriesRecyclerAdapter.OnClickListener {
+        categoriesRVAdapter.setOnClickListener(CategoriesRecyclerAdapter.OnClickListener {
             viewModel.selectCategoryClick(account, it)
         })
 
         binding.gridOfCategories.apply {
-            adapter = categoriesRecyclerAdapter
+            adapter = categoriesRVAdapter
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.categoryViews.collectLatest { newList ->
-                categoriesRecyclerAdapter.submitList(newList)
+                categoriesRVAdapter.submitList(newList)
             }
         }
 
         lifecycleScope.launchWhenStarted {
             activityViewModel.currentDateRange.collectLatest {
-                viewModel.setDataRange(it.first, it.second)
+                viewModel.setDateRange(it.first, it.second)
             }
         }
 
@@ -104,5 +103,4 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
     private fun getCurrentDestination() =
         (findNavController().currentDestination as? FragmentNavigator.Destination)?.className
             ?: (findNavController().currentDestination as? DialogFragmentNavigator.Destination)?.className
-
 }

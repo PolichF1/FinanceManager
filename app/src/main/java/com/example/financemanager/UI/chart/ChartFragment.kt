@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
@@ -35,12 +36,11 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
     private val binding: FragmentChartBinding by viewBinding()
 
     private val viewModel: ChartViewModel by viewModels()
-    private val activityViewModel: MainActivityViewModel by viewModels()
+    private val activityViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-
 
         lifecycleScope.launchWhenStarted {
             viewModel.categoryViews.collectLatest {
@@ -141,7 +141,7 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         this.amount.text = categoryView.amount.toAmountFormat(withMinus = false)
         this.currency.text = currency
 
-       val color = Color.parseColor(categoryView.iconColor)
+        val color = Color.parseColor(categoryView.iconColor)
 
         this.amount.setTextColor(color)
         this.currency.setTextColor(color)

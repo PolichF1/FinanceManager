@@ -68,7 +68,7 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
                             findNavController().navigate(AccountsFragmentDirections.actionAccountsFragmentToAccountAddFragment())
                         }
                     }
-                    is AccountsViewModel.Event.OpenAccountActionSheet -> {
+                    is AccountsViewModel.Event.OpenTheAccountActionsSheet -> {
                         if (getCurrentDestination() == this@AccountsFragment.javaClass.name) {
                             findNavController().navigate(
                                 AccountsFragmentDirections.actionAccountsFragmentToAccountActionsSheetFragment(

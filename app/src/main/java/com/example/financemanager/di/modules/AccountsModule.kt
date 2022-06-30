@@ -22,13 +22,12 @@ object AccountsModule {
 
     @Provides
     @Singleton
-    fun providesAccountsUseCases(repository: AccountsRepository): AccountsUseCases {
-        return AccountsUseCases(
+    fun provideAccountsUseCases(repository: AccountsRepository): AccountUseCases {
+        return AccountUseCases(
             getAccounts = GetAccounts(repository),
             addAccount = AddAccount(repository),
             updateAccount = UpdateAccount(repository),
             deleteAccount = DeleteAccount(repository),
         )
     }
-
 }

@@ -17,22 +17,21 @@ object TransactionsModule {
 
     @Provides
     @Singleton
-    fun providesTransactionsRepository(db: AppDataBase): TransactionsRepository {
+    fun provideTransactionsRepository(db: AppDataBase): TransactionsRepository {
         return TransactionsRepositoryImpl(db.transactionsDao)
     }
 
     @Provides
     @Singleton
-    fun providesTransactionsUseCases(
+    fun provideTransactionsUseCases(
         transactionsRepository: TransactionsRepository,
         accountsRepository: AccountsRepository
     ): TransactionUseCases {
         return TransactionUseCases(
             getTransactionViews = GetTransactionViews(transactionsRepository),
             addTransaction = AddTransaction(transactionsRepository, accountsRepository),
-            getTransactionListWithDayInfo = GetTransactionListWithAmountsPerDay(transactionsRepository),
-            deleteTransactionById = DeleteTransactionById(transactionsRepository, accountsRepository)
+            deleteTransactionById = DeleteTransactionById(transactionsRepository, accountsRepository),
+            getTransactionListWithDayInfo = GetTransactionListWithAmountsPerDay(transactionsRepository)
         )
     }
-
 }

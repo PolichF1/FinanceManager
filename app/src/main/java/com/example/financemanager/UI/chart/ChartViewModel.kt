@@ -28,19 +28,19 @@ class ChartViewModel @Inject constructor(
     private var getCategoriesWithAmountJob: Job? = null
 
     init {
-        getCategoryView()
+        getCategoryViews()
     }
 
-    private fun getCategoryView(from: LocalDate? = null, to: LocalDate? = null) {
+    private fun getCategoryViews(from: LocalDate? = null, to: LocalDate? = null) {
         getCategoriesWithAmountJob?.cancel()
         getCategoriesWithAmountJob =
             categoryUseCases.getCategoryViews(from, to)
-            .onEach { categories -> _categoryViews.value = categories }
-            .launchIn(viewModelScope)
+                .onEach { categories -> _categoryViews.value = categories }
+                .launchIn(viewModelScope)
     }
 
     fun setDateRange(from: LocalDate?, to: LocalDate?) {
-        getCategoryView(from, to)
+        getCategoryViews(from, to)
     }
 
     fun selectDateClick() {
@@ -54,5 +54,4 @@ class ChartViewModel @Inject constructor(
     sealed class Event {
         object SelectDate : Event()
     }
-
 }

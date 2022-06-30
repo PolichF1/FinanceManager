@@ -12,17 +12,17 @@ import com.example.financemanager.DateUtils.DAY_IN_MS
 import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.DateUtils.toLocalDate
 import com.example.financemanager.DateUtils.toMilliseconds
-import com.example.financemanager.databinding.FragmentSelectDateDialogBinding
+import com.example.financemanager.databinding.DialogFragmentSelectDateBinding
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class SelectDateDialogFragment : DialogFragment(R.layout.fragment_select_date_dialog) {
+class SelectDateDialogFragment : DialogFragment(R.layout.dialog_fragment_select_date) {
 
-    private val binding: FragmentSelectDateDialogBinding by viewBinding()
+    private val binding: DialogFragmentSelectDateBinding by viewBinding()
 
-    private val viewModel: SelectDateDialogViewModel by viewModels()
+    private val viewModel: SelectDateViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,11 +48,11 @@ class SelectDateDialogFragment : DialogFragment(R.layout.fragment_select_date_di
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.events.collectLatest { event ->
-                when (event) {
-                    is SelectDateDialogViewModel.Event.SelectDate -> {
+            viewModel.events.collectLatest {
+                when (it) {
+                    is SelectDateViewModel.Event.SelectDate -> {
                         val datePicker = MaterialDatePicker.Builder.datePicker()
-                            .setTitleText("Select Date")
+                            .setTitleText("Select date")
                             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                             .build()
 
@@ -63,34 +63,30 @@ class SelectDateDialogFragment : DialogFragment(R.layout.fragment_select_date_di
                         }
                         datePicker.show(childFragmentManager, DATE_PICKER_TAG)
                     }
-                    is SelectDateDialogViewModel.Event.SelectToday -> {
+                    is SelectDateViewModel.Event.SelectToday -> {
                         val date = getCurrentLocalDate()
-                        activityViewModel.setCurrentDateRange(date,date)
+                        activityViewModel.setCurrentDateRange(date, date)
                         dismiss()
                     }
-                    is SelectDateDialogViewModel.Event.SelectWeek -> {
+                    is SelectDateViewModel.Event.SelectWeek -> {
                         val from = (getCurrentLocalDate().toMilliseconds() - (7 * DAY_IN_MS))
                             .toLocalDate()
-
-                        activityViewModel.setCurrentDateRange(from, getCurrentLocalDate())
+                        activityViewModel.setCurrentDateRange(from, null)
                         dismiss()
                     }
-                    is SelectDateDialogViewModel.Event.SelectMonth -> {
+                    is SelectDateViewModel.Event.SelectMonth -> {
                         val from = (getCurrentLocalDate().toMilliseconds() - (30 * DAY_IN_MS))
                             .toLocalDate()
-
-                        activityViewModel.setCurrentDateRange(from, getCurrentLocalDate())
+                        activityViewModel.setCurrentDateRange(from, null)
                         dismiss()
                     }
-                    is SelectDateDialogViewModel.Event.SelectYear -> {
-                        val from =
-                            (getCurrentLocalDate().toMilliseconds() - (365 * DAY_IN_MS)).
-                            toLocalDate()
-
-                        activityViewModel.setCurrentDateRange(from, getCurrentLocalDate())
+                    is SelectDateViewModel.Event.SelectYear -> {
+                        val from = (getCurrentLocalDate().toMilliseconds() - (365 * DAY_IN_MS))
+                            .toLocalDate()
+                        activityViewModel.setCurrentDateRange(from, null)
                         dismiss()
                     }
-                    is SelectDateDialogViewModel.Event.SelectAllTime -> {
+                    is SelectDateViewModel.Event.SelectAllTime -> {
                         activityViewModel.setCurrentDateRange(null, null)
                         dismiss()
                     }
@@ -98,12 +94,6 @@ class SelectDateDialogFragment : DialogFragment(R.layout.fragment_select_date_di
             }
         }
     }
-
-
-
-
-
-
 
     companion object {
         private const val DATE_PICKER_TAG = "date_picker_tag"

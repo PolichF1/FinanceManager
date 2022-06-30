@@ -4,9 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -47,9 +45,9 @@ class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
             Color.parseColor(color)
         )
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.events.collectLatest { event ->
-                when (event) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collectLatest {
+                when (it) {
                     is AccountEditViewModel.Event.UpdateAccount -> {
                         val newAccount = account.copy(
                             name = binding.nameTextField.editText?.text.toString(),
@@ -60,23 +58,18 @@ class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
 
                         viewModel.updateAccount(newAccount)
                         if (getCurrentDestination() == this@AccountEditFragment.javaClass.name)
-                            findNavController()
-                                .navigate(
-                                    AccountEditFragmentDirections
-                                        .actionAccountEditFragmentToAccountsFragment()
-                                )
+                            findNavController().navigate(AccountEditFragmentDirections.actionAccountEditFragmentToAccountsFragment())
                     }
                     is AccountEditViewModel.Event.SelectColor -> {
                         DrawableCompat.setTint(
                             binding.selectedColor.drawable,
-                            Color.parseColor(event.color)
+                            Color.parseColor(it.color)
                         )
-                        color = event.color
+                        color = it.color
                     }
                 }
             }
         }
-
     }
 
     private fun colorClickListener() {
@@ -112,5 +105,4 @@ class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
     private fun getCurrentDestination() =
         (findNavController().currentDestination as? FragmentNavigator.Destination)?.className
             ?: (findNavController().currentDestination as? DialogFragmentNavigator.Destination)?.className
-
 }

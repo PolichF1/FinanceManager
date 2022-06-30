@@ -9,7 +9,7 @@ import kotlin.math.absoluteValue
 object DateUtils {
 
     fun Double.toAmountFormat(withMinus: Boolean): String {
-        return DecimalFormat(if (withMinus) "-###,###.##" else "###,###.##").format(this.absoluteValue)
+        return DecimalFormat(if (withMinus) "—###,###.##" else "###,###.##").format(this.absoluteValue)
     }
 
     fun getCurrentLocalDate(): LocalDate = LocalDate.parse(
@@ -28,6 +28,6 @@ object DateUtils {
 
     fun String.asLocalDate(): LocalDate = LocalDate.parse(this)
 
-    const val DAY_IN_MS = 1000 * 60 * 60 * 24
+    const val DAY_IN_MS: Long = 1000 * 60 * 60 * 24
 
 }

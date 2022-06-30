@@ -2,12 +2,13 @@ package com.example.financemanager.dataBase.dao
 
 import androidx.room.*
 import com.example.financemanager.data.models.Account
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountsDao {
 
-    @Query("SELECT * FROM 'accounts'")
-    fun getAccounts(): kotlinx.coroutines.flow.Flow<List<Account>>
+    @Query("SELECT * FROM accounts")
+    fun getAccounts(): Flow<List<Account>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccount(account: Account)
@@ -20,4 +21,5 @@ interface AccountsDao {
 
     @Delete
     suspend fun deleteAccount(account: Account)
+
 }

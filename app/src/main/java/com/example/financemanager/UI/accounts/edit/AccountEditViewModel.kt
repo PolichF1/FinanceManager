@@ -4,7 +4,7 @@ import android.widget.ImageView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountsUseCases
+import com.example.financemanager.data.useCases.AccountUseCases
 import com.example.financemanager.utils.PRIMARY_COLOR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountEditViewModel @Inject constructor(
-    private val accountsUseCases: AccountsUseCases
+    private val accountsUseCases: AccountUseCases
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<Event>()
@@ -30,6 +30,7 @@ class AccountEditViewModel @Inject constructor(
         }
     }
 
+
     fun selectColorClick(image: ImageView) {
         viewModelScope.launch {
             val colorInt = image.imageTintList?.defaultColor
@@ -42,7 +43,7 @@ class AccountEditViewModel @Inject constructor(
     }
 
     sealed class Event {
-        object UpdateAccount: Event()
+        object UpdateAccount : Event()
         data class SelectColor(val color: String) : Event()
     }
 }

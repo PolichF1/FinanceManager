@@ -24,14 +24,11 @@ import kotlinx.coroutines.flow.collectLatest
 class AccountActionsSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentAccountActionsSheetBinding? = null
-    private val binding
-        get() = _binding!!
+    private val binding get() = _binding!!
 
     private val viewModel: AccountActionsViewModel by viewModels()
 
     private val args by navArgs<AccountActionsSheetFragmentArgs>()
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,40 +56,36 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         binding.editButton.setOnClickListener {
             viewModel.editButtonClick(account)
         }
-
         binding.deleteButton.setOnClickListener {
             viewModel.deleteButtonClick(account)
         }
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.events.collectLatest { event ->
-                when (event) {
+        lifecycleScope.launchWhenStarted {
+            viewModel.events.collectLatest {
+                when (it) {
                     is AccountActionsViewModel.Event.NavigateToEditAccountScreen -> {
-                       if (getCurrentDestination() == this@AccountActionsSheetFragment.javaClass.name) {
-                           findNavController().navigate(
-                               AccountActionsSheetFragmentDirections
-                                   .actionAccountActionsSheetFragmentToAccountEditFragment(account)
-                           )
-                       }
+                        findNavController().navigate(
+                            AccountActionsSheetFragmentDirections
+                                .actionAccountActionsSheetFragmentToAccountEditFragment(account)
+                        )
                     }
-                    is AccountActionsViewModel.Event.ShowDeleteAccountDialog -> {
-                        val alert = AlertDialog.Builder(requireContext())
+                    is AccountActionsViewModel.Event.ShowTheDeleteAccountDialog -> {
+                        val alert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
                             .setIcon(R.drawable.ic_warning)
                             .setTitle(getString(R.string.delete_alert_title))
                             .setMessage(getString(R.string.delete_alert_subtitle))
                             .setPositiveButton(getString(R.string.ok)) { _, _ ->
-                                viewModel.deleteConfirmButtonClick()
+                                viewModel.deleteConfirmationButtonClick()
                                 this@AccountActionsSheetFragment.dismiss()
                             }
-                            .setNegativeButton(getString(R.string.cancel)) {_, _ ->
+                            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                                 this@AccountActionsSheetFragment.dismiss()
                             }
                             .setCancelable(false)
                             .create()
-
                         alert.show()
                     }
-                    is  AccountActionsViewModel.Event.DeleteAccount -> {
+                    is AccountActionsViewModel.Event.DeleteAccount -> {
                         viewModel.deleteAccount(account)
                         dismiss()
                     }
@@ -101,13 +94,13 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun getCurrentDestination() =
-        (findNavController().currentDestination as? FragmentNavigator.Destination)?.className
-            ?: (findNavController().currentDestination as? DialogFragmentNavigator.Destination)?.className
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
+    private fun getCurrentDestination() =
+        (findNavController().currentDestination as? FragmentNavigator.Destination)?.className
+            ?: (findNavController().currentDestination as? DialogFragmentNavigator.Destination)?.className
 }
 

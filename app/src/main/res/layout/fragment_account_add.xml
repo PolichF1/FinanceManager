@@ -256,6 +256,3 @@
         app:tint="@color/orange_red" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-

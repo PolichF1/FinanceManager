@@ -7,7 +7,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
 import com.example.financemanager.databinding.ActivitySettingsBinding
 
-class SettingsActivity :  AppCompatActivity(R.layout.activity_settings){
+class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
 
     private val binding: ActivitySettingsBinding by viewBinding()
 
@@ -30,5 +30,4 @@ class SettingsActivity :  AppCompatActivity(R.layout.activity_settings){
         onBackPressed()
         return super.onSupportNavigateUp()
     }
-
 }

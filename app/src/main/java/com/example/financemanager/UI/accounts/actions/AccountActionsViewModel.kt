@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountsUseCases
+import com.example.financemanager.data.useCases.AccountUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountActionsViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val accountUseCases: AccountsUseCases
+    private val accountsUseCases: AccountUseCases
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<Event>()
@@ -29,27 +29,25 @@ class AccountActionsViewModel @Inject constructor(
 
     fun deleteButtonClick(account: Account) {
         viewModelScope.launch {
-            _events.emit(Event.ShowDeleteAccountDialog(account))
+            _events.emit(Event.ShowTheDeleteAccountDialog(account))
         }
     }
 
-    fun deleteConfirmButtonClick() {
+    fun deleteConfirmationButtonClick() {
         viewModelScope.launch {
             _events.emit(Event.DeleteAccount)
         }
     }
 
     suspend fun deleteAccount(account: Account) {
-        accountUseCases.deleteAccount(account)
+        accountsUseCases.deleteAccount(account)
     }
 
     fun getPreferences() = sharedPreferences
 
-
     sealed class Event {
-        data class NavigateToEditAccountScreen (val account: Account) : Event()
-        data class ShowDeleteAccountDialog (val account: Account): Event()
+        data class NavigateToEditAccountScreen(val account: Account) : Event()
+        data class ShowTheDeleteAccountDialog(val account: Account) : Event()
         object DeleteAccount : Event()
     }
-
 }

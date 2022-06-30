@@ -14,17 +14,17 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Provides
     @Singleton
+    @Provides
     fun provideAppContext(app: Application): Context = app.applicationContext
 
     @Provides
     @Singleton
-    fun provideDataBase(app: Application): AppDataBase {
+    fun provideDatabase(app: Application): AppDataBase {
         return Room.databaseBuilder(
             app.applicationContext,
             AppDataBase::class.java,
             AppDataBase.APP_DATABASE_NAME
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration().createFromAsset("database/finance_manager.db").build()
     }
 }

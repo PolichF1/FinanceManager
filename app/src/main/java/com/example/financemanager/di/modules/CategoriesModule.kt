@@ -16,15 +16,15 @@ object CategoriesModule {
 
     @Provides
     @Singleton
-    fun providesCategoriesRepository(db: AppDataBase): CategoriesRepository {
+    fun provideCategoriesRepository(db: AppDataBase): CategoriesRepository {
         return CategoriesRepositoryImpl(db.categoriesDao)
     }
 
     @Provides
     @Singleton
-    fun providesCategoriesUseCases(repository: CategoriesRepository): CategoryUseCases {
+    fun provideCategoriesUseCases(repository: CategoriesRepository): CategoryUseCases {
         return CategoryUseCases(
-            getCategoryViews = GetCategoryViews(repository),
+            getCategoryViews = GetCategoryViews(repository)
         )
     }
 }

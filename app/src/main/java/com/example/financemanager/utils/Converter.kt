@@ -1,7 +1,5 @@
 package com.example.financemanager.utils
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.time.LocalTime
@@ -13,7 +11,6 @@ class Converter {
         return date.toString()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun toLocalDate(data: String): LocalDate {
         return LocalDate.parse(data)
@@ -24,11 +21,9 @@ class Converter {
         return time.toString()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun toLocalTime(data: String): LocalTime {
         return LocalTime.parse(data)
     }
-
 
 }

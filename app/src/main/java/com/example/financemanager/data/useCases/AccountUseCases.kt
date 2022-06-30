@@ -4,12 +4,11 @@ import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.repositories.AccountsRepository
 import kotlinx.coroutines.flow.Flow
 
-data class AccountsUseCases(
+data class AccountUseCases(
     val getAccounts: GetAccounts,
     val addAccount: AddAccount,
     val updateAccount: UpdateAccount,
-    val deleteAccount: DeleteAccount
-
+    val deleteAccount: DeleteAccount,
 )
 
 class GetAccounts(private val repository: AccountsRepository) {
@@ -20,21 +19,22 @@ class GetAccounts(private val repository: AccountsRepository) {
 
 class AddAccount(private val repository: AccountsRepository) {
     suspend operator fun invoke(account: Account) {
-        return repository.insertAccount(account)
+        repository.insertAccount(account)
     }
 }
 
 class UpdateAccount(private val repository: AccountsRepository) {
     suspend operator fun invoke(account: Account) {
-        return repository.updateAccount(account)
+        repository.updateAccount(account)
     }
 }
 
 class DeleteAccount(private val repository: AccountsRepository) {
-    suspend operator fun invoke(account: Account){
-        return repository.deleteAccount(account)
+    suspend operator fun invoke(account: Account) {
+        repository.deleteAccount(account);
     }
 }
+
 
 
 

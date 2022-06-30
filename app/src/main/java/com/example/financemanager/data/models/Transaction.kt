@@ -24,20 +24,15 @@ import java.time.LocalTime
         )
     ]
 )
-
 data class Transaction(
-
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
-
     val note: String,
     val amount: Double,
     val date: LocalDate = getCurrentLocalDate(),
     val time: LocalTime = getCurrentLocalTime(),
-
-    @ColumnInfo(name = "category_id")
-    val categoryId: Int,
-
     @ColumnInfo(name = "account_id")
-    val accountId: Int
+    val accountId: Int,
+    @ColumnInfo(name = "category_id")
+    val categoryId: Int
 )

@@ -20,12 +20,12 @@ import javax.inject.Inject
 
 class TransactionsRecyclerAdapter @Inject constructor(
     private val context: Context,
-    val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences
 ) : ListAdapter<Any, TransactionsRecyclerAdapter.ItemViewHolder>(DIFF_CALLBACK) {
 
     private var onDeleteClickListener: OnDeleteClickListener? = null
 
-    abstract class  ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    abstract class ItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         abstract fun bind(item: Any)
     }
 
@@ -44,7 +44,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        when(holder.itemViewType) {
+        when (holder.itemViewType) {
             TRANSACTION_VIEW_TYPE -> {
                 val viewHolder = holder as TransactionViewHolder
                 viewHolder.bind(getItem(position))
@@ -60,7 +60,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
         return if (getItem(position) is TransactionView) TRANSACTION_VIEW_TYPE else DAY_INFO_VIEW_TYPE
     }
 
-    private var selectedPosition : Int = RecyclerView.NO_POSITION
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
 
     fun clearSelectedPosition() {
         selectedPosition = RecyclerView.NO_POSITION
@@ -81,7 +81,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
 
             DrawableCompat.setTint(
                 binding.iconBackground.drawable,
-                Color.parseColor(transactionView.icon_color)
+                Color.parseColor(transactionView.iconColor)
             )
 
             binding.note.text = transactionView.note
@@ -111,7 +111,6 @@ class TransactionsRecyclerAdapter @Inject constructor(
             binding.deleteButton.setOnClickListener {
                 onDeleteClickListener?.onClick(transactionView)
             }
-
         }
 
         private fun itemSelecting(activate: Boolean) {
@@ -119,7 +118,6 @@ class TransactionsRecyclerAdapter @Inject constructor(
             selectedPosition = if (activate) bindingAdapterPosition else RecyclerView.NO_POSITION
             notifyItemChanged(selectedPosition)
         }
-
     }
 
     inner class DayInfoViewHolder(
@@ -149,8 +147,8 @@ class TransactionsRecyclerAdapter @Inject constructor(
         this.onDeleteClickListener = onDeleteClickListener
     }
 
-    class OnDeleteClickListener(val clickListener: (transition: TransactionView) -> Unit) {
-        fun onClick(transition: TransactionView) = clickListener(transition)
+    class OnDeleteClickListener(val clickListener: (transaction: TransactionView) -> Unit) {
+        fun onClick(transaction: TransactionView) = clickListener(transaction)
     }
 
     companion object {
@@ -158,7 +156,6 @@ class TransactionsRecyclerAdapter @Inject constructor(
         private const val DAY_INFO_VIEW_TYPE = 0
 
         object DIFF_CALLBACK : DiffUtil.ItemCallback<Any>() {
-
             override fun areItemsTheSame(oldItem: Any, newItem: Any): Boolean {
                 return if (oldItem is DayInfo && newItem is DayInfo)
                     oldItem.transactionDate == newItem.transactionDate
@@ -176,6 +173,4 @@ class TransactionsRecyclerAdapter @Inject constructor(
             }
         }
     }
-
-
 }

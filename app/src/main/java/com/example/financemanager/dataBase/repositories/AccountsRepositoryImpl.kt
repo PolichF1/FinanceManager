@@ -7,19 +7,18 @@ import kotlinx.coroutines.flow.Flow
 
 class AccountsRepositoryImpl(
     private val dao: AccountsDao
-): AccountsRepository {
+) : AccountsRepository {
 
     override fun getAccounts(): Flow<List<Account>> {
         return dao.getAccounts()
     }
 
-
     override suspend fun insertAccount(account: Account) {
-        return dao.insertAccount(account)
+        dao.insertAccount(account)
     }
 
     override suspend fun updateAccount(account: Account) {
-        return dao.updateAccount(account)
+        dao.updateAccount(account)
     }
 
     override suspend fun updateAccountAmountById(id: Int, amount: Double) {
@@ -27,6 +26,6 @@ class AccountsRepositoryImpl(
     }
 
     override suspend fun deleteAccount(account: Account) {
-        return dao.deleteAccount(account)
+        dao.deleteAccount(account)
     }
 }

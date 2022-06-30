@@ -17,28 +17,29 @@ import com.example.financemanager.databinding.CategoryItemBinding
 import com.example.financemanager.utils.mapOfDrawables
 import javax.inject.Inject
 
-class CategoriesRecyclerAdapter : ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK){
+class CategoriesRecyclerAdapter :
+    ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK) {
 
     private var onClickListener: OnClickListener? = null
 
-    inner class CategoryViewHolder(private val binding: CategoryItemBinding)
-        : RecyclerView.ViewHolder(binding.root) {
+    inner class CategoryViewHolder(private val binding: CategoryItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-            fun bind(categoryView: CategoryView) {
-                binding.name.text = categoryView.name
-                binding.icon.setImageResource(mapOfDrawables[categoryView.icon] ?: R.drawable.ic_other)
-                binding.amount.visibility = View.GONE
+        fun bind(categoryView: CategoryView) {
+            binding.name.text = categoryView.name
+            binding.icon.setImageResource(mapOfDrawables[categoryView.icon] ?: R.drawable.ic_other)
+            binding.amount.visibility = View.GONE
 
-                DrawableCompat.setTint(
-                    binding.iconBackground.drawable,
-                    Color.parseColor(categoryView.iconColor)
-                )
+            DrawableCompat.setTint(
+                binding.iconBackground.drawable,
+                Color.parseColor(categoryView.iconColor)
+            )
 
-                itemView.setOnClickListener {
-                    onClickListener?.onClick(categoryView)
-                }
+            itemView.setOnClickListener {
+                onClickListener?.onClick(categoryView)
             }
         }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -56,7 +57,7 @@ class CategoriesRecyclerAdapter : ListAdapter<CategoryView, CategoriesRecyclerAd
         }
 
         override fun areContentsTheSame(oldItem: CategoryView, newItem: CategoryView): Boolean {
-            return  oldItem.hashCode() == newItem.hashCode()
+            return oldItem.hashCode() == newItem.hashCode()
         }
     }
 
@@ -64,7 +65,7 @@ class CategoriesRecyclerAdapter : ListAdapter<CategoryView, CategoriesRecyclerAd
         this.onClickListener = onClickListener
     }
 
-    class OnClickListener (val clickListener: (category: CategoryView) -> Unit) {
+    class OnClickListener(val clickListener: (category: CategoryView) -> Unit) {
         fun onClick(category: CategoryView) = clickListener(category)
     }
 }

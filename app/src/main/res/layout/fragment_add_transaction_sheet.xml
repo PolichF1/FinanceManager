@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="12dp"
-    tools:context=".UI.transactions.add.AddTransactionSheetFragment">
+    tools:context=".UI.accounts.actions.AccountActionsSheetFragment">
 
     <LinearLayout
         android:id="@+id/from_to_container"
@@ -133,5 +133,3 @@
         app:srcCompat="@drawable/ic_apply" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-

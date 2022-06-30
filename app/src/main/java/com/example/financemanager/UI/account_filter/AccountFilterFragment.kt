@@ -3,6 +3,7 @@ package com.example.financemanager.UI.account_filter
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.DialogFragment
@@ -90,11 +91,10 @@ class AccountFilterFragment : DialogFragment(R.layout.dialog_fragment_account_fi
     ).apply {
         setDrawable(
             requireNotNull(
-                ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.divider_layer,
-                    null
-                )
+               ContextCompat.getDrawable(
+                   requireContext(),
+                   R.drawable.divider_layer
+               )
             )
         )
     }

@@ -2,6 +2,7 @@ package com.example.financemanager.UI.chart
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -70,6 +71,12 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         }
     }
 
+    private fun getThemeColor(color: Int) : Int {
+        val value = TypedValue()
+        requireContext().theme.resolveAttribute(color, value, true)
+        return  value.data
+    }
+
     private fun updateChartData(categoryViews: List<CategoryView>) {
         val currency = viewModel.getPreferences().getString(
             "currency",
@@ -105,6 +112,8 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         binding.chart.apply {
             isDrawHoleEnabled = true
             holeRadius = 86f
+            setHoleColor(getThemeColor(com.google.android.material.R.attr.colorOnPrimary))
+            setCenterTextColor(getThemeColor(com.google.android.material.R.attr.colorOnSecondary))
             centerText = "Expenses\n$amountString"
             setCenterTextSize(20f)
             description.isEnabled = false

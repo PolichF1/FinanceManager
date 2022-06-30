@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -99,11 +100,10 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
     ).apply {
         setDrawable(
             requireNotNull(
-                ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.divider_layer,
-                    null
-                )
+             ContextCompat.getDrawable(
+                 requireContext(),
+                 R.drawable.divider_layer
+             )
             )
         )
     }

@@ -91,6 +91,10 @@ class TransactionsRecyclerAdapter @Inject constructor(
                 context.resources.getStringArray(R.array.currency_values)[0]
             )
 
+            binding.note.isSelected = true
+            binding.categoryName.isSelected = true
+            binding.cardName.isSelected = true
+
             val isSelected = bindingAdapterPosition == selectedPosition
 
             binding.note.visibility = if (isSelected) View.INVISIBLE else View.VISIBLE

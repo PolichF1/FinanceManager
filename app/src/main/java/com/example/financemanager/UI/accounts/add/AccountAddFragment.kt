@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,16 +41,26 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
             viewModel.events.collectLatest {
                 when (it) {
                     is AccountAddViewModel.Event.AddAccount -> {
-                        val account = Account(
-                            name = binding.nameTextField.editText?.text.toString(),
-                            amount = binding.amountTextField.editText?.text.toString()
-                                .toDoubleOrNull() ?: 0.0,
-                            color = color
-                        )
-                        viewModel.addAccount(account)
+                        val name = binding.nameTextField.editText?.text.toString().trim()
+                        if (name.isEmpty()) {
+                            Toast.makeText(
+                                context,
+                                "Account name is empty",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        else {
+                            val account = Account(
+                                name = name,
+                                amount = binding.amountTextField.editText?.text.toString()
+                                    .toDoubleOrNull() ?: 0.0,
+                                color = color
+                            )
+                            viewModel.addAccount(account)
 
-                        if (getCurrentDestination() == this@AccountAddFragment.javaClass.name)
-                            findNavController().navigate(AccountAddFragmentDirections.actionAccountAddFragmentToAccountsFragment())
+                            if (getCurrentDestination() == this@AccountAddFragment.javaClass.name)
+                                findNavController().navigate(AccountAddFragmentDirections.actionAccountAddFragmentToAccountsFragment())
+                        }
                     }
                     is AccountAddViewModel.Event.SelectColor -> {
                         DrawableCompat.setTint(

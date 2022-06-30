@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
@@ -57,20 +57,30 @@ class AddTransactionSheetFragment : BottomSheetDialogFragment() {
                 when (it) {
                     is AddTransactionViewModel.Event.AddTransaction -> {
                         if (account.id != null) {
-                            val transaction = Transaction(
-                                note = binding.noteTextField.editText?.text.toString(),
-                                amount = binding.expenseTextField.editText?.text.toString()
-                                    .toDoubleOrNull() ?: 0.0,
-                                accountId = account.id,
-                                categoryId = category.id
-                            )
+                            val amount =
+                                binding.expenseTextField.editText?.text.toString().toDoubleOrNull()
 
-                            viewModel.addTransaction(transaction)
-                            if (getCurrentDestination() == this@AddTransactionSheetFragment.javaClass.name) {
-                                findNavController().navigate(
-                                    AddTransactionSheetFragmentDirections
-                                        .actionAddTransactionSheetFragmentToTransactionsFragment()
+                            if (amount == null) {
+                                Toast.makeText(
+                                    context,
+                                    "The expense is entered incorrectly or not entered at all",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                val transaction = Transaction(
+                                    note = binding.noteTextField.editText?.text.toString(),
+                                    amount = amount,
+                                    accountId = account.id,
+                                    categoryId = category.id
                                 )
+
+                                viewModel.addTransaction(transaction)
+                                if (getCurrentDestination() == this@AddTransactionSheetFragment.javaClass.name) {
+                                    findNavController().navigate(
+                                        AddTransactionSheetFragmentDirections
+                                            .actionAddTransactionSheetFragmentToTransactionsFragment()
+                                    )
+                                }
                             }
                         }
                     }

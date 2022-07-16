@@ -22,14 +22,16 @@ import com.example.financemanager.R
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.databinding.CategoryItemBinding
 import com.example.financemanager.databinding.FragmentChartBinding
-import com.example.financemanager.utils.PRIMARY_COLOR
-import com.example.financemanager.utils.mapOfDrawables
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
+import com.example.financemanager.utils.Utils.MAIN_COLOR
+import com.example.financemanager.utils.Utils.setIcon
+import com.example.financemanager.utils.Utils.setTint
 
 @AndroidEntryPoint
 class ChartFragment : Fragment(R.layout.fragment_chart) {
@@ -51,8 +53,14 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         }
 
         lifecycleScope.launchWhenStarted {
-            activityViewModel.currentDateRange.collectLatest {
+            activityViewModel.selectedDateRange.collectLatest {
                 viewModel.setDateRange(it.first, it.second)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            activityViewModel.selectedAccount.collectLatest {
+                viewModel.setSelectedAccount(it)
             }
         }
 
@@ -79,7 +87,7 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
 
     private fun updateChartData(categoryViews: List<CategoryView>) {
         val currency = viewModel.getPreferences().getString(
-            "currency",
+            CURRENCY_PREFERENCE_KEY,
             requireContext().resources.getStringArray(R.array.currency_values)[0]
         )
 
@@ -99,7 +107,7 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
 
         if (amount == 0.0) {
             entries.add(PieEntry(1f))
-            colors.add(Color.parseColor(PRIMARY_COLOR))
+            colors.add(Color.parseColor(MAIN_COLOR))
             binding.chart.alpha = 0.3f
         } else binding.chart.alpha = 1f
 
@@ -146,7 +154,8 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         currency: String?
     ) {
         this.name.text = categoryView.name
-        this.icon.setImageResource(mapOfDrawables[categoryView.icon] ?: 0)
+        this.icon.setIcon(categoryView.icon)
+        this.iconBackground.setTint(categoryView.iconColor)
         this.amount.text = categoryView.amount.toAmountFormat(withMinus = false)
         this.currency.text = currency
 

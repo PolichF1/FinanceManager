@@ -23,13 +23,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
-        tools:text="1 817,20"
         android:textAllCaps="true"
         android:textColor="@color/blue_green"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/accounts_label"
         app:layout_constraintEnd_toStartOf="@id/main_currency"
-        app:layout_constraintTop_toTopOf="@+id/accounts_label" />
+        app:layout_constraintTop_toTopOf="@+id/accounts_label"
+        app:layout_constraintVertical_bias="0.45"
+        tools:text="1 817,20" />
 
     <TextView
         android:id="@+id/main_currency"

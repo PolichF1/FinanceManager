@@ -1,16 +1,12 @@
 package com.example.financemanager.UI.accounts.actions
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.DialogFragmentNavigator
-import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.financemanager.DateUtils.toAmountFormat
@@ -19,6 +15,7 @@ import com.example.financemanager.databinding.FragmentAccountActionsSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
 
 @AndroidEntryPoint
 class AccountActionsSheetFragment : BottomSheetDialogFragment() {
@@ -47,7 +44,7 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         binding.accountName.text = account.name
         binding.accountAmount.text = account.amount.toAmountFormat(withMinus = false)
         binding.accountCurrency.text = viewModel.getPreferences().getString(
-            "currency",
+            CURRENCY_PREFERENCE_KEY,
             requireContext().resources.getStringArray(R.array.currency_values)[0]
         )
 
@@ -98,9 +95,5 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         super.onDestroy()
         _binding = null
     }
-
-    private fun getCurrentDestination() =
-        (findNavController().currentDestination as? FragmentNavigator.Destination)?.className
-            ?: (findNavController().currentDestination as? DialogFragmentNavigator.Destination)?.className
 }
 

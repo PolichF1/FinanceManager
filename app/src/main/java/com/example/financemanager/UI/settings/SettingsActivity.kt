@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.R
 import com.example.financemanager.databinding.ActivitySettingsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(R.layout.activity_settings) {
 
     private val binding: ActivitySettingsBinding by viewBinding()

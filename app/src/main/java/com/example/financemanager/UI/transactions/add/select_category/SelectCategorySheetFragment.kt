@@ -16,9 +16,11 @@ import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentSelectCategorySheetBinding
+import com.example.financemanager.utils.Utils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SelectCategorySheetFragment : BottomSheetDialogFragment() {
@@ -29,9 +31,8 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
     private val viewModel: SelectCategoryViewModel by viewModels()
     private val activityViewModel: MainActivityViewModel by activityViewModels()
 
-    private val categoriesRVAdapter by lazy {
-        CategoriesRecyclerAdapter()
-    }
+    @Inject
+    lateinit var categoriesRecyclerAdapter: CategoriesRecyclerAdapter
 
     private val args by navArgs<SelectCategorySheetFragmentArgs>()
 
@@ -51,28 +52,34 @@ class SelectCategorySheetFragment : BottomSheetDialogFragment() {
         binding.accountName.text = account.name
         binding.accountAmount.text = account.amount.toAmountFormat(withMinus = false)
         binding.accountCurrency.text = viewModel.getPreferences().getString(
-            "currency",
+            Utils.CURRENCY_PREFERENCE_KEY,
             requireContext().resources.getStringArray(R.array.currency_values)[0]
         )
         binding.actionsContainer.setBackgroundColor(Color.parseColor(account.color))
 
-        categoriesRVAdapter.setOnClickListener(CategoriesRecyclerAdapter.OnClickListener {
+        categoriesRecyclerAdapter.setOnClickListener(CategoriesRecyclerAdapter.OnClickListener {
             viewModel.selectCategoryClick(account, it)
         })
 
         binding.gridOfCategories.apply {
-            adapter = categoriesRVAdapter
+            adapter = categoriesRecyclerAdapter
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.categoryViews.collectLatest { newList ->
-                categoriesRVAdapter.submitList(newList)
+                categoriesRecyclerAdapter.submitList(newList)
             }
         }
 
         lifecycleScope.launchWhenStarted {
-            activityViewModel.currentDateRange.collectLatest {
+            activityViewModel.selectedDateRange.collectLatest {
                 viewModel.setDateRange(it.first, it.second)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            activityViewModel.selectedAccount.collectLatest {
+                viewModel.setSelectedAccount(it)
             }
         }
 

@@ -1,8 +1,6 @@
 package com.example.financemanager.data.models
 
 import androidx.room.ColumnInfo
-import androidx.room.TypeConverters
-import com.example.financemanager.utils.Converter
 import java.time.LocalDate
 import java.time.LocalTime
 

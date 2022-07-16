@@ -10,7 +10,11 @@ interface TransactionsRepository {
 
     fun getTransactionViews(from: LocalDate, to: LocalDate): Flow<List<TransactionView>>
 
+    fun getTransactionsViewsForAccount(from: LocalDate, to: LocalDate, id: Int): Flow<List<TransactionView>>
+
     fun getTransactionAmountsPerDay(from: LocalDate, to: LocalDate): Flow<List<DayInfo>>
+
+    fun getTransactionAmountPerDayForAccount(from: LocalDate, to: LocalDate, id: Int): Flow<List<DayInfo>>
 
     suspend fun insertTransaction(transaction: Transaction)
 

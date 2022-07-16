@@ -1,4 +1,4 @@
-package com.example.financemanager.utils
+package com.example.financemanager.common
 
 import androidx.room.TypeConverter
 import java.time.LocalDate

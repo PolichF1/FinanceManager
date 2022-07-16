@@ -15,6 +15,8 @@ import com.example.financemanager.data.models.Account
 import com.example.financemanager.databinding.AccountItemBinding
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
+import com.example.financemanager.utils.Utils.setTint
 
 @Singleton
 class AccountsRecyclerAdapter @Inject constructor(
@@ -31,14 +33,11 @@ class AccountsRecyclerAdapter @Inject constructor(
             binding.name.text = account.name
             binding.amount.text = account.amount.toAmountFormat(withMinus = false)
             binding.currency.text = sharedPreferences.getString(
-                "currency",
+                CURRENCY_PREFERENCE_KEY,
                 context.resources.getStringArray(R.array.currency_values)[0]
             )
 
-            DrawableCompat.setTint(
-                binding.iconBackground.drawable,
-                Color.parseColor(account.color)
-            )
+            binding.iconBackground.setTint(account.color)
 
             itemView.setOnClickListener {
                 onClickListener?.onClick(account)

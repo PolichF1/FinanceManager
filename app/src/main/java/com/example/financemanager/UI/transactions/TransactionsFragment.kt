@@ -1,15 +1,10 @@
 package com.example.financemanager.UI.transactions
 
-import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
@@ -23,7 +18,6 @@ import com.example.financemanager.data.models.TransactionView
 import com.example.financemanager.databinding.FragmentTransactionsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -51,7 +45,7 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
         binding.newTransactionButton.setOnClickListener {
             viewModel.addTransactionClick(
-                activityViewModel.currentAccount.value ?: activityViewModel.accounts.value[0]
+                activityViewModel.selectedAccount.value ?: activityViewModel.accounts.value[0]
             )
         }
 
@@ -71,8 +65,14 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
         }
 
         lifecycleScope.launchWhenStarted {
-            activityViewModel.currentDateRange.collectLatest {
+            activityViewModel.selectedDateRange.collectLatest {
                 viewModel.setDateRange(it.first, it.second)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            activityViewModel.selectedAccount.collectLatest {
+                viewModel.setSelectedAccount(it)
             }
         }
 
@@ -115,7 +115,7 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
         val alert = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setIcon(R.drawable.ic_warning)
-            .setTitle("Do you really to delete this transaction? ")
+            .setTitle(getString(R.string.alert_transaction_title))
             .setMessage("From: ${transaction.categoryName}\nTo: ${transaction.accountName}\nAmount: ${transaction.amount}")
             .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 viewModel.deleteConfirmationButtonClick(transaction)

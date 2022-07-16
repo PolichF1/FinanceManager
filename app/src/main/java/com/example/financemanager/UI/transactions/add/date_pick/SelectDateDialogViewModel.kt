@@ -2,9 +2,14 @@ package com.example.financemanager.UI.transactions.add.date_pick
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.financemanager.DateUtils.DAY_IN_MS
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import com.example.financemanager.DateUtils.getCurrentLocalDate
+import com.example.financemanager.DateUtils.toLocalDate
+import com.example.financemanager.DateUtils.toMilliseconds
 
 class SelectDateViewModel : ViewModel() {
 
@@ -45,6 +50,12 @@ class SelectDateViewModel : ViewModel() {
         viewModelScope.launch {
             _events.emit(Event.SelectAllTime)
         }
+    }
+
+    fun getTheDate (daysAgo :Int = 0): LocalDate {
+        return if (daysAgo != 0)
+            (getCurrentLocalDate().toMilliseconds() - (daysAgo * DAY_IN_MS)).toLocalDate()
+        else getCurrentLocalDate()
     }
 
     sealed class Event {

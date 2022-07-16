@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.useCases.CategoryUseCases
-import com.example.financemanager.utils.mapOfDrawables
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -30,20 +29,33 @@ class SelectCategoryViewModel @Inject constructor(
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
+    private val _selectedAccount = MutableStateFlow<Account?>(null)
+    private val _selectedDateRange = MutableStateFlow<Pair<LocalDate?, LocalDate?>>(null to null)
+
     init {
         getCategoryViews()
     }
 
-    private fun getCategoryViews(from: LocalDate? = null, to: LocalDate? = null) {
+    init {
+        getCategoryViews()
+    }
+
+    private fun getCategoryViews() {
         getCategoryViewsJob?.cancel()
         getCategoryViewsJob =
-            categoryUseCases.getCategoryViews(from, to)
+            categoryUseCases.getCategoryViews(_selectedDateRange.value, _selectedAccount.value)
                 .onEach { categories -> _categoryViews.value = categories }
                 .launchIn(viewModelScope)
     }
 
-    fun setDateRange(from: LocalDate?, to: LocalDate?) {
-        getCategoryViews(from, to)
+    fun setDateRange(from: LocalDate? = null, to: LocalDate? = null) {
+        _selectedDateRange.value = from to to
+        getCategoryViews()
+    }
+
+    fun setSelectedAccount (account: Account? = null) {
+        _selectedAccount.value = account
+        getCategoryViews()
     }
 
     fun selectCategoryClick(account: Account, categoryView: CategoryView) {

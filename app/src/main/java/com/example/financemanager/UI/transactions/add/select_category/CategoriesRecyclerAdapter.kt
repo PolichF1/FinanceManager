@@ -1,6 +1,7 @@
 package com.example.financemanager.UI.transactions.add.select_category
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +11,22 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financemanager.DateUtils.toAmountFormat
 import com.example.financemanager.R
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.databinding.CategoryItemBinding
-import com.example.financemanager.utils.mapOfDrawables
+import com.example.financemanager.utils.Utils
+import com.example.financemanager.utils.Utils.setIcon
+import com.example.financemanager.utils.Utils.setTint
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class CategoriesRecyclerAdapter :
-    ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK) {
+@Singleton
+class CategoriesRecyclerAdapter @Inject constructor(
+    private val context: Context,
+    private val sharedPreferences: SharedPreferences
+) : ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK) {
 
     private var onClickListener: OnClickListener? = null
 
@@ -27,15 +35,16 @@ class CategoriesRecyclerAdapter :
 
         fun bind(categoryView: CategoryView) {
             binding.name.text = categoryView.name
-            binding.icon.setImageResource(mapOfDrawables[categoryView.icon] ?: R.drawable.ic_other)
-            binding.amount.visibility = View.GONE
+            binding.icon.setIcon(categoryView.icon)
+            binding.iconBackground.setTint(categoryView.iconColor)
+
+            binding.amount.text = categoryView.amount.toAmountFormat(withMinus = false)
+            binding.currency.text = sharedPreferences.getString(
+                Utils.CURRENCY_PREFERENCE_KEY,
+                context.resources.getStringArray(R.array.currency_values)[0]
+            )
 
             binding.name.isSelected = true
-
-            DrawableCompat.setTint(
-                binding.iconBackground.drawable,
-                Color.parseColor(categoryView.iconColor)
-            )
 
             itemView.setOnClickListener {
                 onClickListener?.onClick(categoryView)

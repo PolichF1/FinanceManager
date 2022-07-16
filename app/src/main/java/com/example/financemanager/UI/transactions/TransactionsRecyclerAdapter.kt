@@ -15,9 +15,13 @@ import com.example.financemanager.R
 import com.example.financemanager.data.models.*
 import com.example.financemanager.databinding.DayInfoItemBinding
 import com.example.financemanager.databinding.TransactionItemBinding
-import com.example.financemanager.utils.mapOfDrawables
+import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
+import com.example.financemanager.utils.Utils.setIcon
+import com.example.financemanager.utils.Utils.setTint
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class TransactionsRecyclerAdapter @Inject constructor(
     private val context: Context,
     private val sharedPreferences: SharedPreferences
@@ -73,21 +77,14 @@ class TransactionsRecyclerAdapter @Inject constructor(
         override fun bind(item: Any) {
             val transactionView = item as TransactionView
 
+            binding.iconBackground.setTint(transactionView.iconColor)
+            binding.icon.setIcon(transactionView.icon)
             binding.categoryName.text = transactionView.categoryName
             binding.cardName.text = transactionView.accountName
-            binding.icon.setImageResource(
-                mapOfDrawables[transactionView.icon] ?: R.drawable.ic_bank
-            )
-
-            DrawableCompat.setTint(
-                binding.iconBackground.drawable,
-                Color.parseColor(transactionView.iconColor)
-            )
-
             binding.note.text = transactionView.note
             binding.textAmount.text = transactionView.amount.toAmountFormat(withMinus = true)
             binding.textCurrency.text = sharedPreferences.getString(
-                "currency",
+                CURRENCY_PREFERENCE_KEY,
                 context.resources.getStringArray(R.array.currency_values)[0]
             )
 
@@ -137,7 +134,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
 
             binding.amount.text = amount.toAmountFormat(withMinus = true)
             binding.currency.text = sharedPreferences.getString(
-                "currency",
+                CURRENCY_PREFERENCE_KEY,
                 context.resources.getStringArray(R.array.currency_values)[0]
             )
 

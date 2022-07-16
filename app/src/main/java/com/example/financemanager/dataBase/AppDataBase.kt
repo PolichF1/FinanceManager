@@ -9,7 +9,7 @@ import com.example.financemanager.dataBase.dao.TransactionsDao
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.Transaction
-import com.example.financemanager.utils.Converter
+import com.example.financemanager.common.Converter
 
 @Database(
     entities = [Account::class, Category::class, Transaction::class],

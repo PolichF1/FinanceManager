@@ -18,6 +18,8 @@ import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountEditBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import com.example.financemanager.utils.Utils.setTint
+import com.example.financemanager.utils.Utils.showToast
 
 @AndroidEntryPoint
 class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
@@ -41,10 +43,7 @@ class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
 
         var color = account.color
 
-        DrawableCompat.setTint(
-            binding.selectedColor.drawable,
-            Color.parseColor(color)
-        )
+        binding.selectedColor.setTint(color)
 
         lifecycleScope.launchWhenStarted {
             viewModel.events.collectLatest {
@@ -52,19 +51,14 @@ class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
                     is AccountEditViewModel.Event.UpdateAccount -> {
                         val name = binding.nameTextField.editText?.text.toString().trim()
                         if (name.isEmpty()) {
-                            Toast.makeText(
-                                context,
-                                "Account name is empty",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                           showToast(context, getString(R.string.account_empty_name_error))
                         }
                         else {
-                            val newAccount = account.copy(
-                                name = name,
-                                amount = binding.amountTextField.editText?.text
-                                    .toString().toDoubleOrNull() ?: account.amount,
-                                color = color
-                            )
+                            val amount = binding.amountTextField.editText?.text.toString()
+                                .toDoubleOrNull() ?: account.amount
+
+                            val newAccount =
+                                account.copy(name = name, amount = amount, color = color)
 
                             viewModel.updateAccount(newAccount)
                             if (getCurrentDestination() == this@AccountEditFragment.javaClass.name)
@@ -74,10 +68,7 @@ class AccountEditFragment : Fragment(R.layout.fragment_account_edit) {
                         }
                     }
                     is AccountEditViewModel.Event.SelectColor -> {
-                        DrawableCompat.setTint(
-                            binding.selectedColor.drawable,
-                            Color.parseColor(it.color)
-                        )
+                        binding.selectedColor.setTint(it.color)
                         color = it.color
                     }
                 }

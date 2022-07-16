@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.useCases.AccountUseCases
-import com.example.financemanager.utils.PRIMARY_COLOR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.example.financemanager.utils.Utils.getImageViewTint
 
 @HiltViewModel
 class AccountAddViewModel @Inject constructor(
@@ -32,11 +32,7 @@ class AccountAddViewModel @Inject constructor(
 
     fun selectColorClick(image: ImageView) {
         viewModelScope.launch {
-            val colorInt = image.imageTintList?.defaultColor
-            val color = if (colorInt != null) String.format(
-                "#%06X",
-                0xFFFFFF and colorInt
-            ) else PRIMARY_COLOR
+            val color = getImageViewTint(image)
             _events.emit(Event.SelectColor(color))
         }
     }

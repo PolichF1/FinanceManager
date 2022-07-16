@@ -25,23 +25,39 @@ class TransactionsViewModel @Inject constructor(
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
+    private val _selectedAccount = MutableStateFlow<Account?>(null)
+    private val _selectedDateRange = MutableStateFlow<Pair<LocalDate?, LocalDate?>>(null to null)
+
     init {
         getTransactions()
     }
 
     private fun getTransactions(from: LocalDate? = null, to: LocalDate? = null) {
         getTransactionsJob?.cancel()
+
+        val range = _selectedDateRange.value
+        val account = _selectedAccount.value
+
         getTransactionsJob =
-            transactionUseCases.getTransactionViews(from, to)
+            transactionUseCases.getTransactionViews(range, account)
                 .onEach { transactions ->
                     _transactionsWithDayInfo.value =
-                        transactionUseCases.getTransactionListWithDayInfo(transactions, from, to)
+                        transactionUseCases.getTransactionListWithDayInfo(
+                            transactions,
+                            range,
+                            account)
                 }
                 .launchIn(viewModelScope)
     }
 
-    fun setDateRange(from: LocalDate?, to: LocalDate?) {
+    fun setDateRange(from: LocalDate? = null, to: LocalDate? = null) {
+        _selectedDateRange.value = from to to
         getTransactions(from, to)
+    }
+
+    fun setSelectedAccount(account: Account? = null) {
+        _selectedAccount.value = account
+        getTransactions()
     }
 
     fun selectDateClick() {

@@ -15,6 +15,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.financemanager.R
 import com.example.financemanager.data.models.Transaction
 import com.example.financemanager.databinding.FragmentAddTransactionSheetBinding
+import com.example.financemanager.utils.Utils.setIcon
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -46,6 +47,7 @@ class AddTransactionSheetFragment : BottomSheetDialogFragment() {
 
         binding.accountName.text = account.name
         binding.categoryName.text = category.name
+        binding.categoryIcon.setIcon(category.icon)
 
         binding.accountBackground.setBackgroundColor(Color.parseColor(account.color))
         binding.categoryBackground.setBackgroundColor(Color.parseColor(category.iconColor))

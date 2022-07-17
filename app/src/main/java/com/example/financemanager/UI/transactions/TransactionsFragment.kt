@@ -3,6 +3,7 @@ package com.example.financemanager.UI.transactions
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -36,12 +37,13 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        binding.listOfTransactions.apply {
+        binding.transactionsRecyclerView.apply {
             adapter = transactionAdapter
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(
                 DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
             )
+            itemAnimator = null
         }
 
         binding.newTransactionButton.setOnClickListener {
@@ -55,13 +57,20 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
         })
 
         lifecycleScope.launchWhenStarted {
-            viewModel.transactionsWithDayInfo.collectLatest {
-                transactionAdapter.submitList(it)
+            viewModel.transactionsUiState.collectLatest {
+                when (it) {
+                    is TransactionsViewModel.UiState.Ready -> {
+                        binding.progressBar.isVisible = false
+                        binding.noTransaction.visibility =
+                            if (it.transactions.isEmpty()) View.VISIBLE else View.INVISIBLE
 
-                binding.noTransactionImage.visibility =
-                    if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
-                binding.noTransactionText.visibility =
-                    if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
+                        transactionAdapter.submitList(it.transactions)
+                    }
+                    is TransactionsViewModel.UiState.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
+                    else -> Unit
+                }
             }
         }
 

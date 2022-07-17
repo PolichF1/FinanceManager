@@ -42,6 +42,8 @@ class CategoriesRecyclerAdapter @Inject constructor(
 
             binding.name.isSelected = true
 
+            itemView.alpha = if (categoryView.amount == 0.0) 0.3f else 1f
+
             itemView.setOnClickListener {
                 onClickListener?.onClick(categoryView)
             }

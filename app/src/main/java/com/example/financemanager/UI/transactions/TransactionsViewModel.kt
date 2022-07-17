@@ -17,8 +17,8 @@ class TransactionsViewModel @Inject constructor(
     private val transactionUseCases: TransactionUseCases
 ) : ViewModel() {
 
-    private val _transactionsWithDayInfo = MutableStateFlow(emptyList<Any>())
-    val transactionsWithDayInfo: StateFlow<List<Any>> = _transactionsWithDayInfo
+    private val _transactionsUiState = MutableStateFlow<UiState>(UiState.Idle)
+    val transactionsUiState = _transactionsUiState.asStateFlow()
 
     private var getTransactionsJob: Job? = null
 
@@ -33,6 +33,9 @@ class TransactionsViewModel @Inject constructor(
     }
 
     private fun getTransactions(from: LocalDate? = null, to: LocalDate? = null) {
+
+        _transactionsUiState.value = UiState.Loading
+
         getTransactionsJob?.cancel()
 
         val range = _selectedDateRange.value
@@ -41,11 +44,12 @@ class TransactionsViewModel @Inject constructor(
         getTransactionsJob =
             transactionUseCases.getTransactionViews(range, account)
                 .onEach { transactions ->
-                    _transactionsWithDayInfo.value =
-                        transactionUseCases.getTransactionListWithDayInfo(
-                            transactions,
-                            range,
-                            account)
+                    val data = transactionUseCases.getTransactionListWithDayInfo(
+                        transactions,
+                        range,
+                        account
+                    )
+                    _transactionsUiState.value = UiState.Ready(data)
                 }
                 .launchIn(viewModelScope)
     }
@@ -88,10 +92,16 @@ class TransactionsViewModel @Inject constructor(
         transactionUseCases.deleteTransactionById(transaction)
     }
 
+    sealed class UiState {
+        data class Ready(val transactions: List<Any>) : UiState()
+        object Loading : UiState()
+        object Idle : UiState()
+    }
+
     sealed class Event {
         object SelectDate : Event()
         data class OpenTheAddTransactionSheet(val account: Account) : Event()
-        data class ShowTheDeleteTransactionDialog(val transaction: TransactionView): Event()
-        data class DeleteTransaction(val transaction: TransactionView): Event()
+        data class ShowTheDeleteTransactionDialog(val transaction: TransactionView) : Event()
+        data class DeleteTransaction(val transaction: TransactionView) : Event()
     }
 }

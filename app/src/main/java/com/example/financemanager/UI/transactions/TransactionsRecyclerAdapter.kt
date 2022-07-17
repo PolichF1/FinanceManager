@@ -15,6 +15,7 @@ import com.example.financemanager.R
 import com.example.financemanager.data.models.*
 import com.example.financemanager.databinding.DayInfoItemBinding
 import com.example.financemanager.databinding.TransactionItemBinding
+import com.example.financemanager.utils.Utils
 import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
 import com.example.financemanager.utils.Utils.setIcon
 import com.example.financemanager.utils.Utils.setTint
@@ -23,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton
 class TransactionsRecyclerAdapter @Inject constructor(
-    private val context: Context,
     private val sharedPreferences: SharedPreferences
 ) : ListAdapter<Any, TransactionsRecyclerAdapter.ItemViewHolder>(DIFF_CALLBACK) {
 
@@ -83,10 +83,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
             binding.cardName.text = transactionView.accountName
             binding.note.text = transactionView.note
             binding.textAmount.text = transactionView.amount.toAmountFormat(withMinus = true)
-            binding.textCurrency.text = sharedPreferences.getString(
-                CURRENCY_PREFERENCE_KEY,
-                context.resources.getStringArray(R.array.currency_values)[0]
-            )
+            binding.textCurrency.text = sharedPreferences.getString(Utils.CURRENCY_PREFERENCE_KEY, Utils.MAIN_CURRENCY)
 
             binding.note.isSelected = true
             binding.categoryName.isSelected = true
@@ -133,9 +130,7 @@ class TransactionsRecyclerAdapter @Inject constructor(
             val monthAndYear = "${date.month} ${date.year}"
 
             binding.amount.text = amount.toAmountFormat(withMinus = true)
-            binding.currency.text = sharedPreferences.getString(
-                CURRENCY_PREFERENCE_KEY,
-                context.resources.getStringArray(R.array.currency_values)[0]
+            binding.currency.text = sharedPreferences.getString(Utils.CURRENCY_PREFERENCE_KEY, Utils.MAIN_CURRENCY
             )
 
             binding.day.text = date.dayOfMonth.toString()

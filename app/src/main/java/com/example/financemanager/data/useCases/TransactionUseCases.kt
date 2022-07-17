@@ -10,7 +10,6 @@ import com.example.financemanager.data.repositories.TransactionsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
-import kotlin.math.min
 
 data class TransactionUseCases(
     val getTransactionViews: GetTransactionViews,
@@ -71,8 +70,14 @@ class AddTransaction(
     private val accountsRepository: AccountsRepository
 ) {
     suspend operator fun invoke(transaction: Transaction) {
-        transactionsRepository.insertTransaction(transaction)
-        accountsRepository.updateAccountAmountById(transaction.accountId, -1 * transaction.amount)
+        val account = accountsRepository.getAccountById(transaction.accountId)
+
+        if (account != null) {
+            val amount = transaction.amount + account.amount
+
+            accountsRepository.updateAccountAmount(transaction.accountId, amount)
+            transactionsRepository.insertTransaction(transaction)
+        }
     }
 }
 
@@ -81,7 +86,13 @@ class DeleteTransactionById(
     private val accountsRepository: AccountsRepository
 ) {
     suspend operator fun invoke(transaction: TransactionView) {
-        repository.deleteTransactionById(transaction.id)
-        accountsRepository.updateAccountAmountById(transaction.accountId, transaction.amount)
+        val account = accountsRepository.getAccountById(transaction.accountId)
+
+        if (account != null) {
+            val amount = account.amount + transaction.amount
+
+            accountsRepository.updateAccountAmount(transaction.accountId, amount)
+            repository.deleteTransactionById(transaction.id)
+        }
     }
 }

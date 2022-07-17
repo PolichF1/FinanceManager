@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.transactions
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -106,6 +107,20 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
                 }
             }
         }
+    }
+
+    private var currentCurrency: String = ""
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onStart() {
+        super.onStart()
+        if (currentCurrency != activityViewModel.getCurrency())
+            transactionAdapter.notifyDataSetChanged()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        currentCurrency = activityViewModel.getCurrency()
     }
 
     private var alertIsShowing = false

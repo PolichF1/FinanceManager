@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChartViewModel @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
     private val categoryUseCases: CategoryUseCases
 ) : ViewModel() {
 
@@ -58,8 +57,6 @@ class ChartViewModel @Inject constructor(
             _events.emit(Event.SelectDate)
         }
     }
-
-    fun getPreferences() = sharedPreferences
 
     sealed class Event {
         object SelectDate : Event()

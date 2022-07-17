@@ -24,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoriesRecyclerAdapter @Inject constructor(
-    private val context: Context,
     private val sharedPreferences: SharedPreferences
 ) : ListAdapter<CategoryView, CategoriesRecyclerAdapter.CategoryViewHolder>(DIFF_CALLBACK) {
 
@@ -39,10 +38,7 @@ class CategoriesRecyclerAdapter @Inject constructor(
             binding.iconBackground.setTint(categoryView.iconColor)
 
             binding.amount.text = categoryView.amount.toAmountFormat(withMinus = false)
-            binding.currency.text = sharedPreferences.getString(
-                Utils.CURRENCY_PREFERENCE_KEY,
-                context.resources.getStringArray(R.array.currency_values)[0]
-            )
+            binding.currency.text = sharedPreferences.getString(Utils.CURRENCY_PREFERENCE_KEY, Utils.MAIN_CURRENCY)
 
             binding.name.isSelected = true
 

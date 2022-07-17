@@ -12,6 +12,7 @@ import com.example.financemanager.R
 object Utils {
 
     const val MAIN_COLOR = "#ffee423e"
+    const val MAIN_CURRENCY = "BYN"
 
     const val THEME_PREFERENCE_KEY = "theme"
     const val THEME_DARK = "dark"

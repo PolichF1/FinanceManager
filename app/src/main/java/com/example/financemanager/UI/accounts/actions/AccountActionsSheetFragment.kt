@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.financemanager.DateUtils.toAmountFormat
+import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountActionsSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -24,6 +26,7 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: AccountActionsViewModel by viewModels()
+    private val activityViewModel: MainActivityViewModel by activityViewModels()
 
     private val args by navArgs<AccountActionsSheetFragmentArgs>()
 
@@ -43,10 +46,7 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
 
         binding.accountName.text = account.name
         binding.accountAmount.text = account.amount.toAmountFormat(withMinus = false)
-        binding.accountCurrency.text = viewModel.getPreferences().getString(
-            CURRENCY_PREFERENCE_KEY,
-            requireContext().resources.getStringArray(R.array.currency_values)[0]
-        )
+        binding.accountCurrency.text = activityViewModel.getCurrency()
 
         binding.actionsContainer.setBackgroundColor(Color.parseColor(account.color))
 

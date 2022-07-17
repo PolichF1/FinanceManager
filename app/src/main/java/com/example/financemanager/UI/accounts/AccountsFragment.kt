@@ -1,5 +1,6 @@
 package com.example.financemanager.UI.accounts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.DateUtils.toAmountFormat
+import com.example.financemanager.MainActivityViewModel
 import com.example.financemanager.R
 import com.example.financemanager.databinding.FragmentAccountsBinding
 import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
@@ -31,6 +34,7 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
     private val binding: FragmentAccountsBinding by viewBinding()
 
     private val viewModel: AccountsViewModel by viewModels()
+    private val activityViewModel: MainActivityViewModel by activityViewModels()
 
     @Inject
     lateinit var accountsAdapter: AccountsRecyclerAdapter
@@ -46,17 +50,15 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
         binding.listOfAccounts.apply {
             adapter = accountsAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(getDivider(context))
+            addItemDecoration(getDivider(requireContext()))
         }
 
         lifecycleScope.launchWhenStarted {
             viewModel.accounts.collectLatest { newList ->
                 accountsAdapter.submitList(newList)
-                binding.fullAmount.text = viewModel.getFullAmount().toAmountFormat(withMinus = false)
-                binding.mainCurrency.text = viewModel.getPreferences().getString(
-                    CURRENCY_PREFERENCE_KEY,
-                    requireContext().resources.getStringArray(R.array.currency_values)[0]
-                )
+                binding.fullAmount.text =
+                    viewModel.getFullAmount().toAmountFormat(withMinus = false)
+                binding.mainCurrency.text = activityViewModel.getCurrency()
             }
         }
 
@@ -80,6 +82,22 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
                 }
             }
         }
+    }
+
+    private var currentCurrency: String = ""
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onStart() {
+        super.onStart()
+        if (currentCurrency != activityViewModel.getCurrency()) {
+            binding.mainCurrency.text = activityViewModel.getCurrency()
+            accountsAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        currentCurrency = activityViewModel.getCurrency()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

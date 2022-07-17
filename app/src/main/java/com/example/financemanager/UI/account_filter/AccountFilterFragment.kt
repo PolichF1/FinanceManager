@@ -37,13 +37,10 @@ class AccountFilterFragment : DialogFragment(R.layout.dialog_fragment_account_fi
         binding.listOfAccounts.apply {
             adapter = accountsAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(getDivider(context))
+            addItemDecoration(getDivider(requireContext()))
         }
 
-        binding.allAccountsCurrency.text = viewModel.getPreferences().getString(
-            CURRENCY_PREFERENCE_KEY,
-            requireContext().resources.getStringArray(R.array.currency_values)[0]
-        )
+        binding.allAccountsCurrency.text = activityViewModel.getCurrency()
 
         binding.allAccountsIconColor.setTint(activityViewModel.selectedAccount.value?.color)
 

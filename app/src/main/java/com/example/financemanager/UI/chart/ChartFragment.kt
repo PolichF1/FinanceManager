@@ -22,6 +22,7 @@ import com.example.financemanager.R
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.databinding.CategoryItemBinding
 import com.example.financemanager.databinding.FragmentChartBinding
+import com.example.financemanager.utils.Utils
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -47,8 +48,7 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
 
         lifecycleScope.launchWhenStarted {
             viewModel.categoryViews.collectLatest {
-                if (it.isNotEmpty())
-                    updateChartData(it)
+                updateChartData(it)
             }
         }
 
@@ -79,59 +79,74 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         }
     }
 
-    private fun getThemeColor(color: Int) : Int {
+    private var currentCurrency: String = ""
+
+    override fun onStart() {
+        super.onStart()
+        if (currentCurrency != activityViewModel.getCurrency()) {
+            updateChartData(viewModel.categoryViews.value)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        currentCurrency = activityViewModel.getCurrency()
+    }
+
+    private fun getThemeColor(color: Int): Int {
         val value = TypedValue()
         requireContext().theme.resolveAttribute(color, value, true)
-        return  value.data
+        return value.data
     }
 
     private fun updateChartData(categoryViews: List<CategoryView>) {
-        val currency = viewModel.getPreferences().getString(
-            CURRENCY_PREFERENCE_KEY,
-            requireContext().resources.getStringArray(R.array.currency_values)[0]
-        )
 
-        updateCategories(categoryViews, currency)
+        if (categoryViews.isNotEmpty()) {
+            val currency = activityViewModel.getCurrency()
 
-        var amount = 0.0
-        val entries = ArrayList<PieEntry>()
-        val colors = ArrayList<Int>()
+            updateCategories(categoryViews, currency)
 
-        categoryViews.forEach { category ->
-            if (category.amount != 0.0) {
-                entries.add(PieEntry(category.amount.toFloat()))
-                colors.add(Color.parseColor(category.iconColor))
-                amount += category.amount
+            var amount = 0.0
+            val entries = ArrayList<PieEntry>()
+            val colors = ArrayList<Int>()
+
+            categoryViews.forEach { category ->
+                if (category.amount != 0.0) {
+                    entries.add(PieEntry(category.amount.toFloat()))
+                    colors.add(Color.parseColor(category.iconColor))
+                    amount += category.amount
+                }
             }
+
+            if (amount == 0.0) {
+                entries.add(PieEntry(1f))
+                colors.add(Color.parseColor(Utils.MAIN_COLOR))
+                binding.chart.alpha = 0.3f
+            } else binding.chart.alpha = 1f
+
+            val dataSet = PieDataSet(entries, "")
+            dataSet.colors = colors
+            dataSet.setDrawValues(false)
+            dataSet.sliceSpace = 2f
+
+            val amountString = amount.toAmountFormat(withMinus = false) + ' ' + currency
+            binding.chart.apply {
+                isDrawHoleEnabled = true
+                holeRadius = 86f
+                setHoleColor(getThemeColor(com.google.android.material.R.attr.colorOnPrimary))
+                setCenterTextColor(getThemeColor(com.google.android.material.R.attr.colorOnSecondary))
+                centerText = "Expense\n$amountString"
+                setCenterTextSize(20f)
+                description.isEnabled = false
+                legend.isEnabled = false
+
+                data = PieData(dataSet)
+            }
+
+            binding.chart.invalidate()
+            binding.chart.animateY(1000, Easing.EaseInOutQuad)
         }
 
-        if (amount == 0.0) {
-            entries.add(PieEntry(1f))
-            colors.add(Color.parseColor(MAIN_COLOR))
-            binding.chart.alpha = 0.3f
-        } else binding.chart.alpha = 1f
-
-        val dataSet = PieDataSet(entries, "")
-        dataSet.colors = colors
-        dataSet.setDrawValues(false)
-        dataSet.sliceSpace = 2f
-
-        val amountString = amount.toAmountFormat(withMinus = false) + ' ' + currency
-        binding.chart.apply {
-            isDrawHoleEnabled = true
-            holeRadius = 86f
-            setHoleColor(getThemeColor(com.google.android.material.R.attr.colorOnPrimary))
-            setCenterTextColor(getThemeColor(com.google.android.material.R.attr.colorOnSecondary))
-            centerText = "Expenses\n$amountString"
-            setCenterTextSize(20f)
-            description.isEnabled = false
-            legend.isEnabled = false
-
-            data = PieData(dataSet)
-        }
-
-        binding.chart.invalidate()
-        binding.chart.animateY(1000, Easing.EaseInOutQuad)
     }
 
     private fun updateCategories(categoryViews: List<CategoryView>, currency: String?) {

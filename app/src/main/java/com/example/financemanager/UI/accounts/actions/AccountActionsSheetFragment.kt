@@ -43,12 +43,17 @@ class AccountActionsSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val account = args.selectedAccount
+        val size = args.numberOfAccounts
 
         binding.accountName.text = account.name
         binding.accountAmount.text = account.amount.toAmountFormat(withMinus = false)
         binding.accountCurrency.text = activityViewModel.getCurrency()
 
         binding.actionsContainer.setBackgroundColor(Color.parseColor(account.color))
+
+        binding.deleteButton.visibility = if (size == 1) View.GONE else View.VISIBLE
+        binding.deleteButtonText.visibility = if (size == 1) View.INVISIBLE else View.VISIBLE
+        binding.deleteButtonIcon.visibility = if (size == 1) View.INVISIBLE else View.VISIBLE
 
         binding.editButton.setOnClickListener {
             viewModel.editButtonClick(account)

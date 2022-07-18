@@ -73,7 +73,7 @@ class AddTransaction(
         val account = accountsRepository.getAccountById(transaction.accountId)
 
         if (account != null) {
-            val amount = transaction.amount + account.amount
+            val amount = account.amount - transaction.amount
 
             accountsRepository.updateAccountAmount(transaction.accountId, amount)
             transactionsRepository.insertTransaction(transaction)

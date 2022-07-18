@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.TransactionView
-import com.example.financemanager.data.useCases.TransactionUseCases
+import com.example.financemanager.data.useCases.DeleteTransactionByIdUseCase
+import com.example.financemanager.data.useCases.GetTransactionViewsUseCase
+import com.example.financemanager.data.useCases.GetTransactionsWithDayInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -14,7 +16,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionsViewModel @Inject constructor(
-    private val transactionUseCases: TransactionUseCases
+    private val getTransactionViewsUseCase: GetTransactionViewsUseCase,
+    private val getTransactionsWithDayInfoUseCase: GetTransactionsWithDayInfoUseCase,
+    private val deleteTransactionByIdUseCase: DeleteTransactionByIdUseCase
 ) : ViewModel() {
 
     private val _transactionsUiState = MutableStateFlow<UiState>(UiState.Idle)
@@ -32,7 +36,7 @@ class TransactionsViewModel @Inject constructor(
         getTransactions()
     }
 
-    private fun getTransactions(from: LocalDate? = null, to: LocalDate? = null) {
+    private fun getTransactions() {
 
         _transactionsUiState.value = UiState.Loading
 
@@ -42,9 +46,9 @@ class TransactionsViewModel @Inject constructor(
         val account = _selectedAccount.value
 
         getTransactionsJob =
-            transactionUseCases.getTransactionViews(range, account)
+            getTransactionViewsUseCase(range, account)
                 .onEach { transactions ->
-                    val data = transactionUseCases.getTransactionListWithDayInfo(
+                    val data = getTransactionsWithDayInfoUseCase(
                         transactions,
                         range,
                         account
@@ -56,7 +60,7 @@ class TransactionsViewModel @Inject constructor(
 
     fun setDateRange(from: LocalDate? = null, to: LocalDate? = null) {
         _selectedDateRange.value = from to to
-        getTransactions(from, to)
+        getTransactions()
     }
 
     fun setSelectedAccount(account: Account? = null) {
@@ -89,7 +93,7 @@ class TransactionsViewModel @Inject constructor(
     }
 
     suspend fun deleteTransaction(transaction: TransactionView) {
-        transactionUseCases.deleteTransactionById(transaction)
+        deleteTransactionByIdUseCase(transaction)
     }
 
     sealed class UiState {

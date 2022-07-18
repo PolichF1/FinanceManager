@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.useCases.CategoryUseCases
+import com.example.financemanager.data.useCases.GetCategoryViewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChartViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases
+    private val getCategoryViewsUseCase: GetCategoryViewsUseCase
 ) : ViewModel() {
 
     private val _categoryViews = MutableStateFlow(emptyList<CategoryView>())
@@ -37,7 +38,7 @@ class ChartViewModel @Inject constructor(
     private fun getCategoryViews(from: LocalDate? = null, to: LocalDate? = null) {
         getCategoriesView?.cancel()
         getCategoriesView =
-            categoryUseCases.getCategoryViews(_selectedDateRange.value, _selectedAccount.value)
+            getCategoryViewsUseCase(_selectedDateRange.value, _selectedAccount.value)
                 .onEach { categories -> _categoryViews.value = categories }
                 .launchIn(viewModelScope)
     }

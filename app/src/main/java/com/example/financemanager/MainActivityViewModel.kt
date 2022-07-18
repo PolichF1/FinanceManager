@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountUseCases
+import com.example.financemanager.data.useCases.GetAccountsUseCase
 import com.example.financemanager.utils.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val accountUseCases: AccountUseCases
+    private val getAccountsUseCase: GetAccountsUseCase
 ) : ViewModel() {
 
     private val _accounts = MutableStateFlow(emptyList<Account>())
@@ -42,10 +42,8 @@ class MainActivityViewModel @Inject constructor(
 
     private fun getAccounts() {
         getAccountsJob?.cancel()
-        getAccountsJob = accountUseCases.getAccounts()
-            .onEach { accounts ->
-                _accounts.value = accounts
-            }
+        getAccountsJob = getAccountsUseCase()
+            .onEach { accounts -> _accounts.value = accounts }
             .launchIn(viewModelScope)
     }
 

@@ -16,18 +16,26 @@ object AccountsModule {
 
     @Provides
     @Singleton
-    fun provideAccountsRepository(db: AppDataBase): AccountsRepository {
-        return AccountsRepositoryImpl(db.accountsDao)
-    }
+    fun provideAccountsRepository(db: AppDataBase): AccountsRepository =
+        AccountsRepositoryImpl(db.accountsDao)
 
     @Provides
     @Singleton
-    fun provideAccountsUseCases(repository: AccountsRepository): AccountUseCases {
-        return AccountUseCases(
-            getAccounts = GetAccounts(repository),
-            addAccount = AddAccount(repository),
-            updateAccount = UpdateAccount(repository),
-            deleteAccount = DeleteAccount(repository),
-        )
-    }
+    fun provideGetAccountsUseCase(repository: AccountsRepository): GetAccountsUseCase =
+        GetAccountsUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideAddAccountUseCase(repository: AccountsRepository): AddAccountUseCase =
+        AddAccountUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateAccountUseCase(repository: AccountsRepository): UpdateAccountUseCase =
+        UpdateAccountUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideDeleteAccountUseCase(repository: AccountsRepository): DeleteAccountUseCase =
+        DeleteAccountUseCase(repository)
 }

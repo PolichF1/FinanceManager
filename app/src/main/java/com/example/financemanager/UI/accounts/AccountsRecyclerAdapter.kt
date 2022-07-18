@@ -16,11 +16,11 @@ import com.example.financemanager.databinding.AccountItemBinding
 import javax.inject.Inject
 import javax.inject.Singleton
 import com.example.financemanager.utils.Utils.CURRENCY_PREFERENCE_KEY
+import com.example.financemanager.utils.Utils.MAIN_CURRENCY
 import com.example.financemanager.utils.Utils.setTint
 
 @Singleton
 class AccountsRecyclerAdapter @Inject constructor(
-    private val context: Context,
     private val sharedPreferences: SharedPreferences
 ) : ListAdapter<Account, AccountsRecyclerAdapter.AccountViewHolder>(DIFF_CALLBACK) {
 
@@ -32,10 +32,7 @@ class AccountsRecyclerAdapter @Inject constructor(
         fun bind(account: Account) {
             binding.name.text = account.name
             binding.amount.text = account.amount.toAmountFormat(withMinus = false)
-            binding.currency.text = sharedPreferences.getString(
-                CURRENCY_PREFERENCE_KEY,
-                context.resources.getStringArray(R.array.currency_values)[0]
-            )
+            binding.currency.text = sharedPreferences.getString(CURRENCY_PREFERENCE_KEY, MAIN_CURRENCY)
 
             binding.iconBackground.setTint(account.color)
 

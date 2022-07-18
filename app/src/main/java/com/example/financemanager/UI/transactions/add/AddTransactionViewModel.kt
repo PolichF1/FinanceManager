@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.Category
 import com.example.financemanager.data.models.Transaction
+import com.example.financemanager.data.useCases.AddTransactionUseCase
 import com.example.financemanager.data.useCases.CategoryUseCases
-import com.example.financemanager.data.useCases.TransactionUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -15,14 +15,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddTransactionViewModel @Inject constructor(
-    private val transactionUseCases: TransactionUseCases
+    private val addTransactionUseCase: AddTransactionUseCase
 ) : ViewModel() {
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
     suspend fun addTransaction(transaction: Transaction) {
-        transactionUseCases.addTransaction(transaction)
+        addTransactionUseCase(transaction)
     }
 
     fun applyButtonClick() {

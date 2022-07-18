@@ -17,21 +17,30 @@ object TransactionsModule {
 
     @Provides
     @Singleton
-    fun provideTransactionsRepository(db: AppDataBase): TransactionsRepository {
-        return TransactionsRepositoryImpl(db.transactionsDao)
-    }
+    fun provideTransactionsRepository(db: AppDataBase): TransactionsRepository =
+        TransactionsRepositoryImpl(db.transactionsDao)
 
     @Provides
     @Singleton
-    fun provideTransactionsUseCases(
+    fun provideGetTransactionViewsUserCase(transactionsRepository: TransactionsRepository): GetTransactionViewsUseCase =
+        GetTransactionViewsUseCase(transactionsRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetTransactionListWithDayInfoUseCase(transactionsRepository: TransactionsRepository): GetTransactionsWithDayInfoUseCase =
+        GetTransactionsWithDayInfoUseCase(transactionsRepository)
+
+    @Provides
+    @Singleton
+    fun provideAddTransactionUseCase(
         transactionsRepository: TransactionsRepository,
         accountsRepository: AccountsRepository
-    ): TransactionUseCases {
-        return TransactionUseCases(
-            getTransactionViews = GetTransactionViews(transactionsRepository),
-            addTransaction = AddTransaction(transactionsRepository, accountsRepository),
-            deleteTransactionById = DeleteTransactionById(transactionsRepository, accountsRepository),
-            getTransactionListWithDayInfo = GetTransactionListWithAmountsPerDay(transactionsRepository)
-        )
-    }
+    ): AddTransactionUseCase = AddTransactionUseCase(transactionsRepository, accountsRepository)
+
+    @Provides
+    @Singleton
+    fun provideDeleteTransactionByIdUseCase(
+        transactionsRepository: TransactionsRepository,
+        accountsRepository: AccountsRepository
+    ): DeleteTransactionByIdUseCase = DeleteTransactionByIdUseCase(transactionsRepository, accountsRepository)
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
 import com.example.financemanager.data.models.CategoryView
 import com.example.financemanager.data.useCases.CategoryUseCases
+import com.example.financemanager.data.useCases.GetCategoryViewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SelectCategoryViewModel @Inject constructor(
-    private val categoryUseCases: CategoryUseCases
+    private val getCategoryViewsUseCase: GetCategoryViewsUseCase
 ) : ViewModel() {
 
     private var getCategoryViewsJob: Job? = null
@@ -42,7 +43,7 @@ class SelectCategoryViewModel @Inject constructor(
     private fun getCategoryViews() {
         getCategoryViewsJob?.cancel()
         getCategoryViewsJob =
-            categoryUseCases.getCategoryViews(_selectedDateRange.value, _selectedAccount.value)
+            getCategoryViewsUseCase(_selectedDateRange.value, _selectedAccount.value)
                 .onEach { categories -> _categoryViews.value = categories }
                 .launchIn(viewModelScope)
     }

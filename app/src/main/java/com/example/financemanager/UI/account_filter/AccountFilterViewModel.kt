@@ -3,7 +3,7 @@ package com.example.financemanager.UI.account_filter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountUseCases
+import com.example.financemanager.data.useCases.GetAccountsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountFilterViewModel @Inject constructor(
-    private val accountUseCases: AccountUseCases
+    private val getAccountsUseCase: GetAccountsUseCase
 ) : ViewModel() {
 
     private var getAccountsJob: Job? = null
@@ -29,7 +29,7 @@ class AccountFilterViewModel @Inject constructor(
 
     private fun getAccounts() {
         getAccountsJob?.cancel()
-        getAccountsJob = accountUseCases.getAccounts()
+        getAccountsJob = getAccountsUseCase()
             .onEach { accounts ->
                 _accounts.value = accounts
             }

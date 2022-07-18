@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.data.models.Account
-import com.example.financemanager.data.useCases.AccountUseCases
+import com.example.financemanager.data.useCases.GetAccountsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
-    private val accountUseCase: AccountUseCases
+    private val getAccountsUseCase: GetAccountsUseCase
 ) : ViewModel() {
 
     private var getAccountsJob: Job? = null
@@ -31,7 +31,7 @@ class AccountsViewModel @Inject constructor(
 
     private fun getAccounts() {
         getAccountsJob?.cancel()
-        getAccountsJob = accountUseCase.getAccounts()
+        getAccountsJob = getAccountsUseCase()
             .onEach { accounts ->
                 _accounts.value = accounts
             }

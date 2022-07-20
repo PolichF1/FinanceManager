@@ -13,7 +13,12 @@
 
         <action
             android:id="@+id/action_accounts_fragment_to_account_add_fragment"
-            app:destination="@id/account_add_fragment" />
+            app:destination="@id/account_add_fragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
+            app:popUpToInclusive="false"/>
 
         <action
             android:id="@+id/action_accounts_fragment_to_account_actions_sheet_fragment"
@@ -78,7 +83,11 @@
         <action
             android:id="@+id/action_account_actions_sheet_fragment_to_account_edit_fragment"
             app:destination="@id/account_edit_fragment"
-            app:popUpTo="@id/accounts_fragment" />
+            app:popUpTo="@id/accounts_fragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"/>
     </dialog>
 
     <fragment
@@ -89,7 +98,10 @@
 
         <action
             android:id="@+id/action_account_edit_fragment_to_accounts_fragment"
-            app:destination="@id/accounts_fragment" />
+            app:destination="@id/accounts_fragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpToInclusive="false"/>
         <argument
             android:name="editableAccount"
             app:argType="com.example.financemanager.data.models.Account" />
@@ -104,7 +116,10 @@
 
         <action
             android:id="@+id/action_account_add_fragment_to_accounts_fragment"
-            app:destination="@id/accounts_fragment" />
+            app:destination="@id/accounts_fragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpToInclusive="false"/>
 
     </fragment>
 

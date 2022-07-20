@@ -13,7 +13,7 @@ class FinanceManagerApp : Application() {
         super.onCreate()
 
         val theme = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-            .getString(Utils.THEME_PREFERENCE_KEY, "default")
+            .getString(Utils.THEME_PREFERENCE_KEY, Utils.THEME_DEFAULT)
 
         AppCompatDelegate.setDefaultNightMode(
             when (theme) {

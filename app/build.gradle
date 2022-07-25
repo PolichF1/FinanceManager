@@ -52,6 +52,7 @@ android {
 dependencies {
 
     implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "2.5.0-rc01"
     def room_version = "2.4.2"
 
@@ -93,6 +94,15 @@ dependencies {
 
     //Pie chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // Retrofit
+    implementation"com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation "com.squareup.moshi:moshi:1.12.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.12.0"
+
+    // Moshi Converter
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
 
 

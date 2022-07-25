@@ -149,7 +149,7 @@
         app:layout_constraintStart_toEndOf="@+id/expense_text_field"
         app:layout_constraintTop_toTopOf="@id/expense_text_field"
         app:srcCompat="@drawable/ic_circle"
-        app:tint="@color/orange_red" />
+        app:tint="@color/green_main" />
 
     <ImageView
         android:layout_width="wrap_content"

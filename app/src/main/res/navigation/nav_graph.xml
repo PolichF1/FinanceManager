@@ -180,5 +180,16 @@
         android:name="com.example.financemanager.UI.settings.SettingsActivity"
         android:label="SettingsActivity"/>
 
+    <fragment
+        android:id="@+id/currency_converter_fragment"
+        android:name="com.example.financemanager.UI.converter.CurrencyConverterFragment"
+        android:label="Currencies"
+        tools:layout="@layout/fragment_currency_converter">
+
+        <action
+            android:id="@+id/action_currency_converter_fragment_to_settingsActivity"
+            app:destination="@+id/settingsActivity"/>
+    </fragment>
+
 
 </navigation>

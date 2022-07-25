@@ -15,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.financemanager.DateUtils.getCurrentLocalDate
 import com.example.financemanager.UI.accounts.AccountsFragmentDirections
 import com.example.financemanager.UI.chart.ChartFragmentDirections
+import com.example.financemanager.UI.converter.CurrencyConverterFragmentDirections
 import com.example.financemanager.UI.transactions.TransactionsFragmentDirections
 import com.example.financemanager.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
                 when (it) {
                     is MainActivityViewModel.Event.OpenTheSettingsScreen -> {
                         when (currentDestination) {
+                            R.id.currency_converter_fragment -> {
+                                CurrencyConverterFragmentDirections.actionCurrencyConverterFragmentToSettingsActivity()
+                            }
                             R.id.accounts_fragment -> navController.navigate(
                                 AccountsFragmentDirections.actionAccountsFragmentToSettingsActivity()
                             )
@@ -95,7 +99,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.accounts_fragment, R.id.transactions_fragment, R.id.chart_fragment)
+            setOf(
+                R.id.currency_converter_fragment,
+                R.id.accounts_fragment,
+                R.id.transactions_fragment,
+                R.id.chart_fragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavigation.setupWithNavController(navController)
@@ -118,6 +126,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             supportActionBar?.setDisplayShowTitleEnabled(isFragmentWithoutSettingsButton)
 
             val isFragmentWithoutAccountsFilter = when (currentDestination) {
+                R.id.currency_converter_fragment -> true
                 R.id.accounts_fragment -> true
                 R.id.account_actions_sheet_fragment -> true
                 else -> false

@@ -3,9 +3,7 @@ package com.example.financemanager.UI.converter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.financemanager.DateUtils.toAmountFormat
-import com.example.financemanager.data.repositories.ConverterRepository
 import com.example.financemanager.data.useCases.ConvertCurrencyUseCase
-import com.example.financemanager.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,17 +23,15 @@ class CurrencyConverterViewModel @Inject constructor(
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
 
-    var resultValue = 0.0
-
     fun convert(amount: Double, from: String, to: String) {
         viewModelScope.launch {
             _conversion.value = ConversionState.Loading
-            resultValue = convertCurrencyUseCase(amount, from, to)
+            val value = convertCurrencyUseCase(amount, from, to)
             _conversion.value =
-                when (resultValue) {
-                    -1.0 -> ConversionState.Error(CONVERTER_ERROR_MESSAGE)
-                    -2.0 -> ConversionState.Error(CONVERTER_ERROR_MESSAGE)
-                    else -> ConversionState.Ready(resultValue.toAmountFormat(withMinus = false))
+                when (value) {
+                    -1.0 -> ConversionState.Error("Unexpected error")
+                    -2.0 -> ConversionState.Error("Check your internet connection")
+                    else -> ConversionState.Ready(value.toAmountFormat(withMinus = false))
                 }
         }
     }
@@ -46,10 +42,6 @@ class CurrencyConverterViewModel @Inject constructor(
         }
     }
 
-    sealed class Event {
-        object Convert : Event()
-    }
-
     sealed class ConversionState {
         class Ready(val result: String) : ConversionState()
         class Error(val error: String) : ConversionState()
@@ -57,8 +49,8 @@ class CurrencyConverterViewModel @Inject constructor(
         object Idle : ConversionState()
     }
 
-    companion object {
-        private const val CONVERTER_ERROR_MESSAGE = "CONVERTOR ERROR"
+    sealed class Event {
+        object Convert : Event()
     }
 
 }

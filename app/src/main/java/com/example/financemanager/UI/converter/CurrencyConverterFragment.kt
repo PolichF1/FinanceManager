@@ -2,9 +2,7 @@ package com.example.financemanager.UI.converter
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -25,30 +23,33 @@ class CurrencyConverterFragment : Fragment(R.layout.fragment_currency_converter)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.convertButton.setOnClickListener {
-            viewModel.convertButtonClick()
-        }
+        setupConversionCollector()
+        setupEventCollector()
+    }
 
+    private fun setupConversionCollector() {
         lifecycleScope.launchWhenStarted {
-            viewModel.conversion.collectLatest { state ->
-                when(state) {
-
+            viewModel.conversion.collectLatest {
+                when (it) {
                     is CurrencyConverterViewModel.ConversionState.Ready -> {
                         binding.progressBar.isVisible = false
-                        binding.resultText.text = state.result
+                        binding.resultText.text = it.result
                     }
                     is CurrencyConverterViewModel.ConversionState.Loading -> {
                         binding.progressBar.isVisible = true
                     }
                     is CurrencyConverterViewModel.ConversionState.Error -> {
                         binding.progressBar.isVisible = false
-                        Utils.showToast(requireContext(), state.error)
+                        Utils.showToast(requireContext(), it.error)
                     }
                     else -> Unit
-
                 }
             }
         }
+    }
+
+    private fun setupEventCollector() {
+        binding.convertButton.setOnClickListener { viewModel.convertButtonClick() }
 
         lifecycleScope.launchWhenStarted {
             viewModel.events.collectLatest {

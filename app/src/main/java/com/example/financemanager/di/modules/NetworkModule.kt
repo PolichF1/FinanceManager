@@ -23,7 +23,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val BASE_CURRENCY_URL = "https://freecurrencyapi.net/"
-    private const val  BASE_BYN_URL = "https://www.nbrb.by/"
+    private const val BASE_BYN_URL = "https://www.nbrb.by/"
 
     private val moshi = MoshiConverterFactory.create(
         Moshi.Builder()

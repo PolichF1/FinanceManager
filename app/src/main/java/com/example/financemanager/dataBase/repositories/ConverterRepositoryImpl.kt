@@ -19,7 +19,6 @@ class ConverterRepositoryImpl(
         return try {
             val response = currencyApi.getRates(base)
             val result = response.body()
-
             if (response.isSuccessful && result != null)
                 Resource.Success(result)
             else Resource.Error(response.message())
@@ -29,11 +28,9 @@ class ConverterRepositoryImpl(
     }
 
     override suspend fun getBynRate(base: String): Resource<BynResponse> {
-        return  try {
-
+        return try {
             val response = bynApi.getRates(base)
             val result = response.body()
-
             if (response.isSuccessful && result != null)
                 Resource.Success(result)
             else Resource.Error(response.message())

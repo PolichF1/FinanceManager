@@ -7,9 +7,8 @@ import retrofit2.http.Path
 
 interface BynApi {
 
-    @GET("api/exrates/rates/{base}?parammode=0")
+    @GET("api/exrates/rates/{base}?parammode=2")
     suspend fun getRates(
         @Path("base") base: String
     ): Response<BynResponse>
-
 }

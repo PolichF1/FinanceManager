@@ -3,7 +3,8 @@ package com.example.financemanager.data.models.currency
 import com.squareup.moshi.Json
 
 data class CurrencyResponse(
-    @Json(name = "data") val rates: Rates
+    @Json(name = "data") val rates: Rates,
+    val query: Query
 )
 
 data class Rates(

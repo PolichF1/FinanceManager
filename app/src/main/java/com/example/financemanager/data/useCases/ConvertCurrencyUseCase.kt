@@ -8,13 +8,12 @@ class ConvertCurrencyUseCase @Inject constructor(private val repository: Convert
 
     suspend operator fun invoke(amount: Double, from: String, to: String): Double {
         if (from == to) return amount
-        val isOperationWithByn = from == CURRENCY_BYN && to == CURRENCY_BYN
+        val isOperationWithBYN = from == "BYN" || to == "BYN"
 
-        return if (!isOperationWithByn)
+        return if (!isOperationWithBYN)
             getCurrencyRate(amount, from, to)
         else
             getBynRate(amount, from, to)
-
     }
 
     private suspend fun getCurrencyRate(amount: Double, from: String, to: String): Double {
@@ -45,10 +44,10 @@ class ConvertCurrencyUseCase @Inject constructor(private val repository: Convert
             is Resource.Success -> {
                 val data = response.data ?: return -1.0
 
-                if (!fromIsByn) amount * (data.rate/data.scale)
-                else amount / (data.rate/data.scale)
+                if (!fromIsByn) amount * (data.rate / data.scale)
+                else amount / (data.rate / data.scale)
             }
-            is  Resource.Error -> -2.0
+            is Resource.Error -> -2.0
         }
     }
 

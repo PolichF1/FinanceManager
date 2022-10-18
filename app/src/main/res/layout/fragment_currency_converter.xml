@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.converter.CurrencyConverterFragment">
+    tools:context=".ui.converter.CurrencyConverterFragment">
 
     <Spinner
         android:id="@+id/from_currency"

@@ -7,7 +7,7 @@
     android:minWidth="256dp"
     android:minHeight="402dp"
     android:orientation="vertical"
-    tools:context=".UI.transactions.add.date_pick.SelectDateDialogFragment">
+    tools:context=".ui.transactions.date_pick.SelectDateDialogFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/select_date"

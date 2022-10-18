@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/accounts_fragment"
-        android:name="com.example.financemanager.UI.accounts.AccountsFragment"
+        android:name="com.example.financemanager.ui.accounts.AccountsFragment"
         android:label="@string/title_accounts"
         tools:layout="@layout/fragment_accounts">
 
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/transactions_fragment"
-        android:name="com.example.financemanager.UI.transactions.TransactionsFragment"
+        android:name="com.example.financemanager.ui.transactions.TransactionsFragment"
         android:label="@string/title_transactions"
         tools:layout="@layout/fragment_transactions" >
 
@@ -51,7 +51,7 @@
 
     <fragment
         android:id="@+id/chart_fragment"
-        android:name="com.example.financemanager.UI.chart.ChartFragment"
+        android:name="com.example.financemanager.ui.chart.ChartFragment"
         android:label="@string/title_chart"
         tools:layout="@layout/fragment_chart" >
 
@@ -67,7 +67,7 @@
 
     <dialog
         android:id="@+id/account_actions_sheet_fragment"
-        android:name="com.example.financemanager.UI.accounts.actions.AccountActionsSheetFragment"
+        android:name="com.example.financemanager.ui.accounts.actions.AccountActionsSheetFragment"
         android:label="@string/account_actions"
         tools:layout="@layout/fragment_account_actions_sheet">
 
@@ -92,7 +92,7 @@
 
     <fragment
         android:id="@+id/account_edit_fragment"
-        android:name="com.example.financemanager.UI.accounts.edit.AccountEditFragment"
+        android:name="com.example.financemanager.ui.accounts.edit.AccountEditFragment"
         android:label="@string/editing"
         tools:layout="@layout/fragment_account_edit">
 
@@ -111,7 +111,7 @@
 
     <fragment
         android:id="@+id/account_add_fragment"
-        android:name="com.example.financemanager.UI.accounts.add.AccountAddFragment"
+        android:name="com.example.financemanager.ui.accounts.add.AccountAddFragment"
         android:label="@string/adding"
         tools:layout="@layout/fragment_account_add">
 
@@ -127,13 +127,13 @@
 
     <dialog
         android:id="@+id/select_date_dialog_fragment"
-        android:name="com.example.financemanager.UI.transactions.add.date_pick.SelectDateDialogFragment"
+        android:name="com.example.financemanager.ui.transactions.date_pick.SelectDateDialogFragment"
         android:label="select_date_dialog_fragment"
         tools:layout="@layout/dialog_fragment_select_date" />
 
     <dialog
         android:id="@+id/select_category_sheet_fragment"
-        android:name="com.example.financemanager.UI.transactions.add.select_category.SelectCategorySheetFragment"
+        android:name="com.example.financemanager.ui.transactions.select_category.SelectCategorySheetFragment"
         android:label="SelectCategorySheetFragment"
         tools:layout="@layout/fragment_select_category_sheet">
         <action
@@ -150,7 +150,7 @@
 
     <dialog
         android:id="@+id/add_transaction_sheet_fragment"
-        android:name="com.example.financemanager.UI.transactions.add.AddTransactionSheetFragment"
+        android:name="com.example.financemanager.ui.transactions.add.AddTransactionSheetFragment"
         android:label="AddTransactionSheetFragment"
         tools:layout="@layout/fragment_add_transaction_sheet">
         <argument
@@ -166,7 +166,7 @@
 
     <dialog
         android:id="@+id/dialog_fragment_account_filter"
-        android:name="com.example.financemanager.UI.account_filter.AccountFilterFragment"
+        android:name="com.example.financemanager.ui.accounts.account_filter.AccountFilterFragment"
         android:label="dialog_fragment_account_filter"
         tools:layout="@layout/dialog_fragment_account_filter" />
 
@@ -177,12 +177,12 @@
     <activity
         tools:layout="@layout/activity_settings"
         android:id="@+id/settingsActivity"
-        android:name="com.example.financemanager.UI.settings.SettingsActivity"
+        android:name="com.example.financemanager.ui.settings.SettingsActivity"
         android:label="SettingsActivity"/>
 
     <fragment
         android:id="@+id/currency_converter_fragment"
-        android:name="com.example.financemanager.UI.converter.CurrencyConverterFragment"
+        android:name="com.example.financemanager.ui.converter.CurrencyConverterFragment"
         android:label="Currencies"
         tools:layout="@layout/fragment_currency_converter">
 

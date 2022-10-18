@@ -1,6 +1,5 @@
 package com.example.financemanager.data.useCases
 
-import com.example.financemanager.data.models.Transaction
 import com.example.financemanager.data.models.TransactionView
 import com.example.financemanager.data.repositories.AccountsRepository
 import com.example.financemanager.data.repositories.TransactionsRepository
@@ -15,7 +14,6 @@ class DeleteTransactionByIdUseCase(
         if (account != null) {
             val amount = account.amount + transaction.amount
             accountsRepository.updateAccountAmount(transaction.accountId, amount)
-
             transactionsRepository.deleteTransactionById(transaction.id)
         }
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    tools:context=".UI.account_filter.AccountFilterFragment">
+    tools:context=".ui.accounts.account_filter.AccountFilterFragment">
 
     <TextView
         android:id="@+id/select_account_label"

@@ -3,10 +3,13 @@ package com.example.financemanager.ui.transactions
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
@@ -35,8 +38,8 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
+        setupMenu()
         setupRecyclerView()
         setupCollectors()
 
@@ -45,6 +48,22 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
                 activityViewModel.selectedAccount.value ?: activityViewModel.accounts.value[0]
             )
         }
+    }
+
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.date_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if (menuItem.itemId == R.id.select_date) {
+                    viewModel.selectDateClick()
+                    true
+                } else false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupRecyclerView() {
@@ -167,17 +186,6 @@ class TransactionsFragment : Fragment(R.layout.fragment_transactions) {
     override fun onPause() {
         super.onPause()
         transactionAdapter.clearSelectedPosition()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.date_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.select_date) {
-            viewModel.selectDateClick()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun getCurrentDestination() =

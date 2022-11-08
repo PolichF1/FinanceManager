@@ -3,8 +3,11 @@ package com.example.financemanager.ui.accounts.add
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
@@ -29,16 +32,34 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
+        setupMenu()
         setupEventCollector()
-
         setupClickListeners()
-
 
     }
 
-    private fun setupEventCollector(){
+    private fun setupMenu() {
+
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+            }
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.update_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if (menuItem.itemId == R.id.apply) {
+                    viewModel.applyButtonClick()
+                    true
+                } else false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupEventCollector() {
         var color = MAIN_COLOR
 
         lifecycleScope.launchWhenStarted {
@@ -89,17 +110,6 @@ class AccountAddFragment : Fragment(R.layout.fragment_account_add) {
             color14.setOnClickListener { viewModel.selectColorClick(it as ImageView) }
             color15.setOnClickListener { viewModel.selectColorClick(it as ImageView) }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.update_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.apply) {
-            viewModel.applyButtonClick()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun getCurrentDestination() =

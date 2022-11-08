@@ -7,8 +7,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
@@ -37,10 +40,35 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
+        setupMenu()
         setupRecyclerView()
         setupCollectors()
+    }
+
+
+    private fun setupMenu() {
+
+        (requireActivity() as MenuHost).addMenuProvider(object: MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.accounts_menu, menu)
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if (menuItem.itemId == R.id.add_account){
+                    viewModel.addButtonClick()
+                    true
+                } else false
+            }
+
+            override fun onMenuClosed(menu: Menu) {
+                super.onMenuClosed(menu)
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupRecyclerView() {
@@ -105,17 +133,6 @@ class AccountsFragment : Fragment(R.layout.fragment_accounts) {
     override fun onStop() {
         super.onStop()
         currentCurrency = activityViewModel.getCurrency()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.accounts_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.add_account) {
-            viewModel.addButtonClick()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun getCurrentDestination() =

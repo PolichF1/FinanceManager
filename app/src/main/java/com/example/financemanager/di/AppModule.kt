@@ -25,6 +25,6 @@ object AppModule {
             app.applicationContext,
             AppDataBase::class.java,
             AppDataBase.APP_DATABASE_NAME
-        ).fallbackToDestructiveMigration().createFromAsset("database/finance_manager.db").build()
+        ).allowMainThreadQueries().createFromAsset("database/finance_manager.db").build()
     }
 }

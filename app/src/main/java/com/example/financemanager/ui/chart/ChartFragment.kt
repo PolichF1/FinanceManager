@@ -8,9 +8,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.DialogFragmentNavigator
 import androidx.navigation.fragment.FragmentNavigator
@@ -42,9 +45,25 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
+        setupMenu()
         setupCollectors()
+    }
+
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.date_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return if (menuItem.itemId == R.id.select_date){
+                    viewModel.selectDateClick()
+                    true
+                } else false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupCollectors() {
@@ -185,17 +204,6 @@ class ChartFragment : Fragment(R.layout.fragment_chart) {
         val value = TypedValue()
         requireContext().theme.resolveAttribute(color, value, true)
         return value.data
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.date_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.select_date) {
-            viewModel.selectDateClick()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun getCurrentDestination() =
